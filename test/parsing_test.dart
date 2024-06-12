@@ -1,89 +1,51 @@
-import 'package:parsing/parsing.dart';
-import 'package:test/test.dart';
 import 'dart:core' as core;
+import 'package:parsing/string.dart' as string;
+import 'package:parsing/iterable.dart' as iterable;
+import 'package:parsing/parsing.dart' as parsing;
+import 'package:test/test.dart';
 
-// "15.832373° S, 47.987751° W"
-final class Coordinate {
-  final core.double latitude;
-  final core.double longitude;
-  Coordinate(this.latitude, this.longitude);
-
-  @core.override
-  core.int get hashCode => latitude.hashCode ^ longitude.hashCode ^ 31;
-
-  core.bool operator ==(core.Object other) {
-    return other is Coordinate &&
-        other.latitude == latitude &&
-        other.longitude == longitude;
-  }
-}
-
-final northSouthSign = char.flatMap((char) {
-  return char == "N"
-      ? always(1)
-      : char == "S"
-          ? always(-1)
-          : never<core.int>();
-});
-
-final eastWestSign = char.flatMap((char) {
-  return char == "E"
-      ? always(1)
-      : char == "W"
-          ? always(-1)
-          : never<core.int>();
-});
-
-final lat = zip3(double, literal("° "), northSouthSign).map((tuple) {
-  final (doubleValue, _, sign) = tuple;
-  return doubleValue * sign;
-});
-
-final lng = zip3(double, literal("° "), eastWestSign).map((tuple) {
-  final (doubleValue, _, sign) = tuple;
-  return doubleValue * sign;
-});
-
-// "15.832373° S, 47.987751° W"
-final coord = zip3(lat, literal(", "), lng).map((tuple) {
-  final (lat, _, lng) = tuple;
-  return Coordinate(lat, lng);
-});
+import 'parsers_coordinate.dart';
 
 void main() {
+  test("prefix int list", () {
+    final (result, rest) = iterable.prefix([1]).run([1, 2, 3, 4]);
+    expect(result, [1]);
+    expect(rest, [2, 3, 4]);
+  });
+
+  test("prefix string", () {
+    final (result, rest) = string.prefix("a").run("abc");
+    expect(result, "a");
+    expect(rest, "bc");
+  });
+
   test("int parser", () {
-    expect(int.run("1"), (1, ""));
-    expect(int.run("111 2"), (111, " 2"));
-    expect(int.run("a1"), (null, "a1"));
+    expect(string.int.run("1"), (1, ""));
+    expect(string.int.run("111 2"), (111, " 2"));
+    expect(string.int.run("a1"), (null, "a1"));
   });
 
   test("double parser", () {
-    expect(double.run("1"), (1.0, ""));
-    expect(double.run("1,1"), (1.1, ""));
-    expect(double.run("1.1"), (1.1, ""));
-    expect(double.run("1,"), (1.0, ","));
-    expect(double.run("1."), (1.0, "."));
-    expect(double.run("."), (null, "."));
-    expect(double.run("a1"), (null, "a1"));
-  });
-
-  test("literal parser", () {
-    expect(literal("a").run("abc"), ("a", "bc"));
-    expect(literal("a").run("bcd"), (null, "bcd"));
-    expect(literal("a").run("bacd"), (null, "bacd"));
+    expect(string.double.run("1"), (1.0, ""));
+    expect(string.double.run("1,1"), (1.1, ""));
+    expect(string.double.run("1.1"), (1.1, ""));
+    expect(string.double.run("1,"), (1.0, ","));
+    expect(string.double.run("1."), (1.0, "."));
+    expect(string.double.run("."), (null, "."));
+    expect(string.double.run("a1"), (null, "a1"));
   });
 
   test("one or more spaces parser", () {
-    expect(oneOrMoreSpaces.run("   "), (unit, ""));
-    expect(oneOrMoreSpaces.run(""), (null, ""));
+    expect(string.oneOrMoreSpaces.run("   "), (parsing.unit, ""));
+    expect(string.oneOrMoreSpaces.run(""), (null, ""));
   });
 
   test("char parser", () {
-    expect(char.run("A"), ("A", ""));
-    expect(char.run("a"), ("a", ""));
-    expect(char.run("ab"), ("a", "b"));
-    expect(char.run("1a"), (null, "1a"));
-    expect(char.run(""), (null, ""));
+    expect(string.char.run("A"), ("A", ""));
+    expect(string.char.run("a"), ("a", ""));
+    expect(string.char.run("ab"), ("a", "b"));
+    expect(string.char.run("1a"), (null, "1a"));
+    expect(string.char.run(""), (null, ""));
   });
 
   test("north south parser", () {
@@ -104,10 +66,10 @@ void main() {
   });
 
   test("prefix up to", () {
-    expect(prefixUpTo("C").run("ABC"), ("AB", "C"));
+    expect(string.prefixUpTo("C").run("ABC"), ("AB", "C"));
   });
 
   test("prefix through", () {
-    expect(prefixThrough("C").run("ABC"), ("ABC", ""));
+    expect(string.prefixThrough("C").run("ABC"), ("ABC", ""));
   });
 }
