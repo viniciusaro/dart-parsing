@@ -102,4 +102,12 @@ void main() {
       (Coordinate(-15.832373, -47.987751), ""),
     );
   });
+
+  test("prefix up to", () {
+    expect(prefixUpTo("C").run("ABC"), ("AB", "C"));
+  });
+
+  test("prefix through", () {
+    expect(prefixThrough("C").run("ABC"), ("ABC", ""));
+  });
 }
