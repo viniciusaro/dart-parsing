@@ -36,8 +36,8 @@ extension ParserTransformations<I, A> on Parser<I, A> {
     });
   }
 
-  Parser<I, (A, B)> take2<B>(Parser<I, B> other) {
-    return zip2(this, other);
+  Parser<I, (A, B)> take<B>(Parser<I, B> other) {
+    return zip(this, other);
   }
 
   Parser<I, (A, B, C)> take3<B, C>(Parser<I, B> parserB, Parser<I, C> parserC) {
@@ -45,7 +45,7 @@ extension ParserTransformations<I, A> on Parser<I, A> {
   }
 }
 
-Parser<I, (A, B)> zip2<I, A, B>(Parser<I, A> parserA, Parser<I, B> parserB) {
+Parser<I, (A, B)> zip<I, A, B>(Parser<I, A> parserA, Parser<I, B> parserB) {
   return Parser<I, (A, B)>((string) {
     final (a, restA) = parserA.run(string);
     if (a == null) {
@@ -64,7 +64,7 @@ Parser<I, (A, B, C)> zip3<I, A, B, C>(
   Parser<I, B> parserB,
   Parser<I, C> parserC,
 ) {
-  return zip2(zip2(parserA, parserB), parserC)
+  return zip(zip(parserA, parserB), parserC)
       .map((tuple3) => (tuple3.$1.$1, tuple3.$1.$2, tuple3.$2));
 }
 
@@ -74,7 +74,7 @@ Parser<I, (A, B, C, D)> zip4<I, A, B, C, D>(
   Parser<I, C> parserC,
   Parser<I, D> parserD,
 ) {
-  return zip2(zip3(parserA, parserB, parserC), parserD)
+  return zip(zip3(parserA, parserB, parserC), parserD)
       .map((tuple4) => (tuple4.$1.$1, tuple4.$1.$2, tuple4.$1.$3, tuple4.$2));
 }
 
@@ -85,6 +85,6 @@ Parser<I, (A, B, C, D, E)> zip5<I, A, B, C, D, E>(
   Parser<I, D> parserD,
   Parser<I, E> parserE,
 ) {
-  return zip2(zip4(parserA, parserB, parserC, parserD), parserE).map((tuple5) =>
+  return zip(zip4(parserA, parserB, parserC, parserD), parserE).map((tuple5) =>
       (tuple5.$1.$1, tuple5.$1.$2, tuple5.$1.$3, tuple5.$1.$4, tuple5.$2));
 }

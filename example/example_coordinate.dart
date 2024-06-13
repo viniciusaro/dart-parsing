@@ -13,20 +13,18 @@ final eastWestSign = oneOf([
 // "15.832373° S"
 final lat = string.double.skip(string.prefix("°"))
     .skip(string.zeroOrMoreSpaces)
-    .take2(northSouthSign)
-    .map(multiplyTuple)
-    .map(numToDouble);
+    .take(northSouthSign)
+    .map(pipe(multiplyTuple, numToDouble));
 
 // "47.987751° W"
 final lng = string.double.skip(string.prefix("°"))
     .skip(string.zeroOrMoreSpaces)
-    .take2(eastWestSign)
-    .map(multiplyTuple)
-    .map(numToDouble);
+    .take(eastWestSign)
+    .map(pipe(multiplyTuple, numToDouble));
 
 // "15.832373° S, 47.987751° W"
 final coord = lat
     .skip(string.prefix(","))
     .skip(string.zeroOrMoreSpaces)
-    .take2(lng)
+    .take(lng)
     .map(Coordinate.tuple);
