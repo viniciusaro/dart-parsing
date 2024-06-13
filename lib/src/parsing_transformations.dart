@@ -1,8 +1,8 @@
 part of 'parsing.dart';
 
-extension ParserTransformations<I, O> on Parser<I, O> {
-  Parser<I, O2> map<O2>(O2 Function(O) transform) {
-    return Parser<I, O2>((input) {
+extension ParserTransformations<I, A> on Parser<I, A> {
+  Parser<I, B> map<B>(B Function(A) transform) {
+    return Parser<I, B>((input) {
       final (a, rest) = run(input);
       if (a == null) {
         return (null, input);
@@ -11,18 +11,37 @@ extension ParserTransformations<I, O> on Parser<I, O> {
     });
   }
 
-  Parser<I, O2> flatMap<O2>(Parser<I, O2> Function(O) transform) {
-    return Parser<I, O2>((string) {
-      final (a, restA) = run(string);
+  Parser<I, B> flatMap<B>(Parser<I, B> Function(A) transform) {
+    return Parser<I, B>((input) {
+      final (a, restA) = run(input);
       if (a == null) {
-        return (null, string);
+        return (null, input);
       }
       final (b, restB) = transform(a).run(restA);
       if (b == null) {
-        return (null, string);
+        return (null, input);
       }
       return (b, restB);
     });
+  }
+
+  Parser<I, A> skip<B>(Parser<I, B> other) {
+    return Parser((input) {
+      final (a, restA) = this.run(input);
+      if (a == null) {
+        return (null, input);
+      }
+      final (_, restB) = other.run(restA);
+      return (a, restB);
+    });
+  }
+
+  Parser<I, (A, B)> take2<B>(Parser<I, B> other) {
+    return zip2(this, other);
+  }
+
+  Parser<I, (A, B, C)> take3<B, C>(Parser<I, B> parserB, Parser<I, C> parserC) {
+    return zip3(this, parserB, parserC);
   }
 }
 
@@ -68,18 +87,4 @@ Parser<I, (A, B, C, D, E)> zip5<I, A, B, C, D, E>(
 ) {
   return zip2(zip4(parserA, parserB, parserC, parserD), parserE).map((tuple5) =>
       (tuple5.$1.$1, tuple5.$1.$2, tuple5.$1.$3, tuple5.$1.$4, tuple5.$2));
-}
-
-extension IterableExtension<T> on core.Iterable<T> {
-  core.bool startsWith(core.Iterable<T> prefix) {
-    if (prefix.length > this.length) {
-      return false;
-    }
-    for (var i = 0; i < prefix.length; i++) {
-      if (prefix.elementAt(i) != this.elementAt(i)) {
-        return false;
-      }
-    }
-    return true;
-  }
 }

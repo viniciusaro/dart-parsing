@@ -170,6 +170,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "pure",
+      "rootUri": "file:///Users/viniciusrodrigues/.pub-cache/hosted/pub.dev/pure-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "shelf",
       "rootUri": "file:///Users/viniciusrodrigues/.pub-cache/hosted/pub.dev/shelf-1.4.1",
       "packageUri": "lib/",
@@ -308,7 +314,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-06-12T19:57:12.982211Z",
+  "generated": "2024-06-13T14:59:54.353630Z",
   "generator": "pub",
   "generatorVersion": "3.4.0",
   "flutterRoot": "file:///Users/viniciusrodrigues/fvm/versions/3.22.0",

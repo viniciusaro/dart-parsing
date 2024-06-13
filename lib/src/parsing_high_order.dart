@@ -22,3 +22,15 @@ Parser<I, I> prefix<I>(
     return (matchResult, rest);
   });
 }
+
+Parser<I, O> oneOf<I, O>(core.List<Parser<I, O>> parsers) {
+  return Parser((input) {
+    for (final parser in parsers) {
+      final (result, rest) = parser.run(input);
+      if (result != null) {
+        return (result, rest);
+      }
+    }
+    return (null, input);
+  });
+}

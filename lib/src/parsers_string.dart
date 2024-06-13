@@ -13,6 +13,12 @@ parsing.Parser<core.String, core.String> prefix(
   );
 }
 
+parsing.Parser<core.String, core.String> prefixUpTo(core.String string) =>
+    prefix("(.*)$string", 1);
+
+parsing.Parser<core.String, core.String> prefixThrough(core.String string) =>
+    prefix(".*$string");
+
 final int = prefix(r'\d+').map(core.int.parse);
 
 final double = prefix(r'\d+([,|.]?\d)*')
@@ -22,12 +28,6 @@ final double = prefix(r'\d+([,|.]?\d)*')
 final char = prefix(r'[a-z|A-Z]');
 
 final zeroOrMoreSpaces = prefix(r' ').map((_) => unit);
-
-parsing.Parser<core.String, core.String> prefixUpTo(core.String string) =>
-    prefix("(.*)$string", 1);
-
-parsing.Parser<core.String, core.String> prefixThrough(core.String string) =>
-    prefix(".*$string");
 
 final oneOrMoreSpaces = prefix(r' +').flatMap((spaces) => spaces.isNotEmpty
     ? parsing.always(unit)
