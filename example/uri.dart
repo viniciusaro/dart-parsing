@@ -1,16 +1,16 @@
 part of 'example.dart';
 
-class UriInput extends Equatable {
+class RequestInput extends Equatable {
   final List<String> pathSegments;
   final Map<String, String> queryParameters;
 
-  UriInput(Uri source)
+  RequestInput(Uri source)
       : pathSegments = List.from(source.pathSegments),
         queryParameters = Map.from(source.queryParameters);
 
-  UriInput._(this.pathSegments, this.queryParameters);
-  factory UriInput.empty() => UriInput._([], {});
-  factory UriInput.parse(String string) => UriInput(Uri.parse(string));
+  RequestInput._(this.pathSegments, this.queryParameters);
+  factory RequestInput.empty() => RequestInput._([], {});
+  factory RequestInput.uri(String string) => RequestInput(Uri.parse(string));
 
   @override
   List<Object?> get props => [pathSegments, queryParameters];

@@ -1,41 +1,42 @@
 part of 'example.dart';
 
-Parser<UriInput, O> path<O>(Parser<String, O> parser) {
-  return Parser((uri) {
-    final segment = uri.pathSegments.firstOrNull;
+Parser<RequestInput, O> path<O>(Parser<String, O> parser) {
+  return Parser((input) {
+    final segment = input.pathSegments.firstOrNull;
     if (segment == null) {
-      return (null, uri);
+      return (null, input);
     }
     final (result, rest) = parser.run(segment);
     if (rest.isNotEmpty) {
-      return (null, uri);
+      return (null, input);
     }
-    uri.pathSegments.removeAt(0);
-    return (result, uri);
+    input.pathSegments.removeAt(0);
+    return (result, input);
   });
 }
 
-Parser<UriInput, O> query<O>(String name, Parser<String, O> parser) {
-  return Parser((uri) {
-    final param = uri.queryParameters[name];
+Parser<RequestInput, O> query<O>(String name, Parser<String, O> parser) {
+  return Parser((input) {
+    final param = input.queryParameters[name];
     if (param == null) {
-      return (null, uri);
+      return (null, input);
     }
     final (result, rest) = parser.run(param);
     if (rest.isNotEmpty) {
-      return (null, uri);
+      return (null, input);
     }
-    uri.queryParameters.remove(name);
-    return (result, uri);
+    input.queryParameters.remove(name);
+    return (result, input);
   });
 }
 
-Parser<UriInput, Unit> end<O>() {
-  return Parser((uri) {
-    if (uri.pathSegments.isNotEmpty) {
-      return (null, uri);
+Parser<RequestInput, Unit> end<O>() {
+  return Parser((input) {
+    if (input.pathSegments.isNotEmpty) {
+      return (null, input);
     }
-    return (unit, uri);
+    input.queryParameters.clear();
+    return (unit, input);
   });
 }
 

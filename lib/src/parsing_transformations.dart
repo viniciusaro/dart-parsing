@@ -54,6 +54,13 @@ extension ParserTuple3Extensions<I, A, B> on Parser<I, (A, B)> {
   }
 }
 
+extension ParserTuple4Extensions<I, A, B, C> on Parser<I, (A, B, C)> {
+  Parser<I, (A, B, C, D)> take<D>(Parser<I, D> other) {
+    return zip(this, other)
+        .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$1.$3, tuple.$2));
+  }
+}
+
 Parser<I, (A, B)> zip<I, A, B>(Parser<I, A> parserA, Parser<I, B> parserB) {
   return Parser<I, (A, B)>((string) {
     final (a, restA) = parserA.run(string);
