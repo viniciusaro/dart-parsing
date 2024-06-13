@@ -1,4 +1,6 @@
 import 'dart:core' as core;
+import 'package:parsing/fp.dart';
+
 import 'parsing.dart' as parsing;
 
 parsing.Parser<core.Iterable<E>, core.Iterable<E>> prefix<E>(
