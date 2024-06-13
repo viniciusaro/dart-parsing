@@ -1,5 +1,7 @@
 import 'dart:core' as core;
 
+import 'package:parsing/fp.dart';
+
 part 'parsing_high_order.dart';
 part 'parsing_transformations.dart';
 

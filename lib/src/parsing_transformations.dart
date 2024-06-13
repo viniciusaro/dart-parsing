@@ -39,9 +39,18 @@ extension ParserTransformations<I, A> on Parser<I, A> {
   Parser<I, (A, B)> take<B>(Parser<I, B> other) {
     return zip(this, other);
   }
+}
 
-  Parser<I, (A, B, C)> take3<B, C>(Parser<I, B> parserB, Parser<I, C> parserC) {
-    return zip3(this, parserB, parserC);
+extension ParserVoidExtensions<I> on Parser<I, Unit> {
+  Parser<I, B> take<B>(Parser<I, B> other) {
+    return zip(this, other).map((tuple) => tuple.$2);
+  }
+}
+
+extension ParserTuple3Extensions<I, A, B> on Parser<I, (A, B)> {
+  Parser<I, (A, B, C)> take<C>(Parser<I, C> other) {
+    return zip(this, other)
+        .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$2));
   }
 }
 
