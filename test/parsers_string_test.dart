@@ -1,5 +1,6 @@
-import 'package:test/test.dart';
+import 'package:parsing/parsing.dart' as parsing;
 import 'package:parsing/string.dart';
+import 'package:test/test.dart';
 
 void main() {
   test("prefix", () {
@@ -31,7 +32,7 @@ void main() {
   });
 
   test("one or more spaces", () {
-    expect(oneOrMoreSpaces.run("   "), (unit, ""));
+    expect(oneOrMoreSpaces.run("   "), (parsing.unit, ""));
     expect(oneOrMoreSpaces.run(""), (null, ""));
   });
 

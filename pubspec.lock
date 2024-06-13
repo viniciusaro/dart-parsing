@@ -86,14 +86,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
-  fpdart:
-    dependency: "direct main"
-    description:
-      name: fpdart
-      sha256: "7413acc5a6569a3fe8277928fc7487f3198530f0c4e635d0baef199ea36e8ee9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   frontend_server_client:
     dependency: transitive
     description:
@@ -222,6 +214,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  pure:
+    dependency: "direct main"
+    description:
+      name: pure
+      sha256: ddb9cb7f9990f60c8eaf03acfc58a2e9667f17976d1aa2077e31f3a1adb14f4f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   shelf:
     dependency: transitive
     description:

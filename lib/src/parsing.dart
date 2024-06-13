@@ -8,3 +8,9 @@ class Parser<Input, Output> {
   final (Output?, Input) Function(Input) run;
   Parser(this.run);
 }
+
+class Unit {
+  const Unit._();
+}
+
+final unit = const Unit._();

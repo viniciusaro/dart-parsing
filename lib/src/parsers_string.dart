@@ -1,6 +1,5 @@
 import 'dart:core' as core;
 import 'parsing.dart' as parsing;
-import 'package:fpdart/fpdart.dart';
 
 parsing.Parser<core.String, core.String> prefix(
   core.String pattern, [
@@ -27,8 +26,8 @@ final double = prefix(r'\d+([,|.]?\d)*')
 
 final char = prefix(r'[a-z|A-Z]');
 
-final zeroOrMoreSpaces = prefix(r' ').map((_) => unit);
+final zeroOrMoreSpaces = prefix(r' ').map((_) => parsing.unit);
 
 final oneOrMoreSpaces = prefix(r' +').flatMap((spaces) => spaces.isNotEmpty
-    ? parsing.always(unit)
-    : parsing.never<core.String, Unit>());
+    ? parsing.always(parsing.unit)
+    : parsing.never<core.String, parsing.Unit>());
