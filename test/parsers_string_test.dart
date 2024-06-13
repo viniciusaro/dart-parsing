@@ -1,4 +1,4 @@
-import 'package:parsing/parsing.dart' as parsing;
+import 'package:parsing/fp.dart';
 import 'package:parsing/string.dart';
 import 'package:test/test.dart';
 
@@ -32,7 +32,7 @@ void main() {
   });
 
   test("one or more spaces", () {
-    expect(oneOrMoreSpaces.run("   "), (parsing.unit, ""));
+    expect(oneOrMoreSpaces.run("   "), (unit, ""));
     expect(oneOrMoreSpaces.run(""), (null, ""));
   });
 
