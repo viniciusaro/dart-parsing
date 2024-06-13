@@ -1,2 +1,5 @@
 # FVM Version Cache
 .fvm/
+
+# Dart
+.dart_tool/
