@@ -34,12 +34,14 @@ final eastWestSign = string.char.flatMap((char) {
           : never<String, int>();
 });
 
+// "15.832373° S"
 final lat =
     zip3(string.double, string.prefix("° "), northSouthSign).map((tuple) {
   final (doubleValue, _, sign) = tuple;
   return doubleValue * sign;
 });
 
+// "47.987751° W"
 final lng = zip3(string.double, string.prefix("° "), eastWestSign).map((tuple) {
   final (doubleValue, _, sign) = tuple;
   return doubleValue * sign;
