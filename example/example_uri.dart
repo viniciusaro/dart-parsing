@@ -1,5 +1,15 @@
 part of 'example.dart';
 
+Parser<Optional<Uri>, O> uri<O>(Parser<RequestInput, O> requestInput) {
+  return Parser((uri) {
+    final (result, rest) = requestInput.run(RequestInput(uri.optional!));
+    if (rest != RequestInput.empty()) {
+      return (null, uri);
+    }
+    return (result, None());
+  });
+}
+
 Parser<RequestInput, O> path<O>(Parser<String, O> parser) {
   return Parser((input) {
     final segment = input.pathSegments.firstOrNull;
@@ -30,28 +40,25 @@ Parser<RequestInput, O> query<O>(String name, Parser<String, O> parser) {
   });
 }
 
-Parser<RequestInput, Unit> end<O>() {
-  return Parser((input) {
-    if (input.pathSegments.isNotEmpty) {
-      return (null, input);
-    }
-    input.queryParameters.clear();
-    return (unit, input);
-  });
-}
-
 // episodes/42
 // episodes/42?time=120&speed=2x
-final episode = path(string.prefix("episodes").map(toUnit))
-    .take(path(string.int))
-    .take(optional(query("time", string.int)))
-    .take(optional(query("speed", string.int.skip(string.prefix("x")))))
-    .skip(end())
-    .map(Route.episodes);
+final episode = uri(
+  path(string.prefix("episodes").map(toUnit))
+      .take(path(string.int))
+      .take(optional(query("time", string.int)))
+      .take(optional(query("speed", string.int.skip(string.prefix("x")))))
+      .map(Route.episodes),
+);
 
 // episodes/42/comments
-final episodeComments = path(string.prefix("episodes").map(toUnit))
-    .take(path(string.int))
-    .skip(path(string.prefix("comments")))
-    .skip(end())
-    .map(Route.episodeComments);
+final episodeComments = uri(
+  path(string.prefix("episodes").map(toUnit))
+      .take(path(string.int))
+      .skip(path(string.prefix("comments")))
+      .map(Route.episodeComments),
+);
+
+final router = oneOf([
+  episode,
+  episodeComments,
+]);

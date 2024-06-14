@@ -7,7 +7,7 @@ class Unit {
 }
 
 sealed class Optional<A> {
-  static Some<A> some<A>(A value) => Some<A>(value: value);
+  static Some<A> some<A>(A value) => Some<A>(value);
   static None<A> none<A>() => None<A>();
 
   A? get optional {
@@ -23,10 +23,18 @@ sealed class Optional<A> {
 
 class Some<A> extends Optional<A> {
   final A value;
-  Some({required this.value});
+  Some(this.value);
+
+  @override
+  int get hashCode => value.hashCode ^ 31;
+  bool operator ==(Object other) => other is Some<A> && other.value == value;
 }
 
-class None<A> extends Optional<A> {}
+class None<A> extends Optional<A> {
+  @override
+  int get hashCode => A.hashCode ^ 31;
+  bool operator ==(Object other) => other is None<A> && A != dynamic;
+}
 
 C Function(A) pipe<A, B, C>(
   B Function(A) f,
