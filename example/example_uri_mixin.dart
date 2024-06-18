@@ -39,7 +39,7 @@ class Path<O> with ParserMixin<RequestInput, O> {
     final segment = input.pathSegments.firstOrNull;
     if (segment == null) {
       throw ParserError(
-        expected: "segment to be parsed",
+        expected: "segment to parse",
         remainingInput: input,
       );
     }
@@ -47,7 +47,7 @@ class Path<O> with ParserMixin<RequestInput, O> {
     final (result, segmentRest) = parser.run(segment);
     if (segmentRest.isNotEmpty) {
       throw ParserError(
-        expected: "segment not fully consumed",
+        expected: "segment to be fully consumed",
         remainingInput: input,
       );
     }
@@ -68,14 +68,14 @@ class Query<O> with ParserMixin<RequestInput, O> {
     final param = input.queryParameters[name];
     if (param == null) {
       throw ParserError(
-        expected: "param to be parsed",
+        expected: "param to parse",
         remainingInput: input,
       );
     }
     final (result, paramRest) = parser.run(param);
     if (paramRest.isNotEmpty) {
       throw ParserError(
-        expected: "param not fully consumed",
+        expected: "param to be fully consumed",
         remainingInput: input,
       );
     }
@@ -86,8 +86,9 @@ class Query<O> with ParserMixin<RequestInput, O> {
   }
 }
 
+// episodes/42
 // episodes/42?time=120&speed=2x
-final episodeMixin = SkipFirst(Path(StringPrefix("episodes"))) //
+final episodeMixin = Path(StringPrefix("episodes").map(toUnit))
     .take(Path(IntParser()))
     .take(OptionalParser(Query("time", IntParser())))
     .take(OptionalParser(Query("speed", IntParser().skip(StringPrefix("x")))))

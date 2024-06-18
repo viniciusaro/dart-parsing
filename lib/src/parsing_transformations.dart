@@ -26,6 +26,10 @@ extension ParserTransformations<I, A> on Parser<I, A> {
   Parser<I, (A, B)> take<B>(Parser<I, B> other) {
     return zip(this, other);
   }
+
+  Parser<I, A> takeUnit(Parser<I, Unit> other) {
+    return zip(this, other).map((tuple) => tuple.$1);
+  }
 }
 
 extension ParserVoidExtensions<I> on Parser<I, Unit> {

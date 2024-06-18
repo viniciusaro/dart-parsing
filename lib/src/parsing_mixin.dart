@@ -242,11 +242,7 @@ class OptionalParser<I, O> with ParserMixin<I, O?> {
   @override
   (O?, I) run(I input) {
     try {
-      final (result, rest) = other.run(input);
-      if (result == null) {
-        return (null, rest);
-      }
-      return (result, rest);
+      return other.run(input);
     } catch (e) {
       return (null, input);
     }
