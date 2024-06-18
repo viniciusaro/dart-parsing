@@ -1,5 +1,4 @@
 import 'package:parsing/fp.dart';
-import 'package:parsing/parsing.dart';
 import 'package:test/test.dart';
 
 import '../example/example.dart';

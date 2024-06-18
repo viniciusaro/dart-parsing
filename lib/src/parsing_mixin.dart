@@ -234,21 +234,21 @@ class IntParser with ParserMixin<String, int> {
   }
 }
 
-class OptionalParser<I, O> with ParserMixin<I, Optional<O>> {
+class OptionalParser<I, O> with ParserMixin<I, O?> {
   final ParserMixin<I, O> other;
 
   OptionalParser(this.other);
 
   @override
-  (Optional<O>, I) run(I input) {
+  (O?, I) run(I input) {
     try {
       final (result, rest) = other.run(input);
       if (result == null) {
-        return (None(), rest);
+        return (null, rest);
       }
-      return (Some(result), rest);
+      return (result, rest);
     } catch (e) {
-      return (None(), input);
+      return (null, input);
     }
   }
 }

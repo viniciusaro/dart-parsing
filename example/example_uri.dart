@@ -47,7 +47,7 @@ final episode = uri(
       .take(path(string.int))
       .take(optional(query("time", string.int)))
       .take(optional(query("speed", string.int.skip(string.prefix("x")))))
-      .map(Route.episodes),
+      .map(Route.episodesOptional),
 );
 
 // episodes/42/comments
