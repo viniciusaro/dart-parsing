@@ -36,16 +36,26 @@ class None<A> extends Optional<A> {
 }
 
 ///
-sealed class Result<T, F> {}
+sealed class Result<A, F> {
+  A? get value {
+    final self = this;
+    switch (self) {
+      case Success<A, F>():
+        return self.value;
+      case Failure<A, F>():
+        return null;
+    }
+  }
+}
 
-class Success<T, F> extends Result<T, F> {
-  final T value;
+class Success<A, F> extends Result<A, F> {
+  final A value;
   Success(this.value);
 }
 
-class Failure<T, F> extends Result<T, F> {
-  final F value;
-  Failure(this.value);
+class Failure<A, F> extends Result<A, F> {
+  final F failure;
+  Failure(this.failure);
 }
 
 ///

@@ -5,16 +5,19 @@ class UriParser<O> with ParserMixin<Optional<Uri>, O> {
   UriParser(this.requestInputParser);
 
   @override
-  (O?, Optional<Uri>) run(Optional<Uri> input) {
+  (O, Optional<Uri>) run(Optional<Uri> input) {
     final nonOptionalInput = input.optional;
     if (nonOptionalInput == null) {
-      return (null, None());
+      throw ParserError(expected: "non optional input", remainingInput: input);
     }
 
     final requestInput = RequestInput(nonOptionalInput);
     final (result, rest) = requestInputParser.run(requestInput);
-    if (result == null || rest != RequestInput.empty()) {
-      return (null, Some(nonOptionalInput));
+    if (rest != RequestInput.empty()) {
+      throw ParserError(
+        expected: "request input to be fully consumed",
+        remainingInput: rest,
+      );
     }
     return (result, None());
   }
@@ -22,9 +25,12 @@ class UriParser<O> with ParserMixin<Optional<Uri>, O> {
 
 class End with ParserMixin<RequestInput, Unit> {
   @override
-  (Unit?, RequestInput) run(RequestInput input) {
-    if (input.pathSegments.isNotEmpty) {
-      return (null, input);
+  (Unit, RequestInput) run(RequestInput input) {
+    if (input != RequestInput.empty()) {
+      throw ParserError(
+        expected: "request input to be fully consumed",
+        remainingInput: input,
+      );
     }
     return (unit, input);
   }
@@ -35,17 +41,26 @@ class Path<O> with ParserMixin<RequestInput, O> {
   Path(this.parser);
 
   @override
-  (O?, RequestInput) run(RequestInput input) {
+  (O, RequestInput) run(RequestInput input) {
     final segment = input.pathSegments.firstOrNull;
     if (segment == null) {
-      return (null, input);
+      throw ParserError(
+        expected: "segment to be parsed",
+        remainingInput: input,
+      );
     }
-    final (result, rest) = parser.run(segment);
-    if (rest.isNotEmpty) {
-      return (null, input);
+
+    final (result, segmentRest) = parser.run(segment);
+    if (segmentRest.isNotEmpty) {
+      throw ParserError(
+        expected: "segment not fully consumed",
+        remainingInput: input,
+      );
     }
-    input.pathSegments.removeAt(0);
-    return (result, input);
+
+    final rest = input.copy();
+    rest.pathSegments.removeAt(0);
+    return (result, rest);
   }
 }
 
@@ -55,17 +70,25 @@ class Query<O> with ParserMixin<RequestInput, O> {
   Query(this.name, this.parser);
 
   @override
-  (O?, RequestInput) run(RequestInput input) {
+  (O, RequestInput) run(RequestInput input) {
     final param = input.queryParameters[name];
     if (param == null) {
-      return (null, input);
+      throw ParserError(
+        expected: "param to be parsed",
+        remainingInput: input,
+      );
     }
-    final (result, rest) = parser.run(param);
-    if (rest.isNotEmpty) {
-      return (null, input);
+    final (result, paramRest) = parser.run(param);
+    if (paramRest.isNotEmpty) {
+      throw ParserError(
+        expected: "param not fully consumed",
+        remainingInput: input,
+      );
     }
-    input.queryParameters.remove(name);
-    return (result, input);
+
+    final rest = input.copy();
+    rest.queryParameters.remove(name);
+    return (result, rest);
   }
 }
 
@@ -75,16 +98,14 @@ final episodeMixin = SkipFirst(Path(StringPrefix("episodes"))) //
     .take(OptionalParser(Query("time", IntParser())))
     .take(OptionalParser(Query("speed", IntParser())))
     .takeUnit(End())
-    .map(Route.episodes)
-    .debug();
+    .map(Route.episodes);
 
 // episodes/42/comments
 final episodeCommentsMixin = SkipFirst(Path(StringPrefix("episodes"))) //
     .take(Path(IntParser()))
     .skip(Path(StringPrefix("comments")))
     .takeUnit(End())
-    .map(Route.episodeComments)
-    .debug();
+    .map(Route.episodeComments);
 
 final routerMixin = UriParser(
   OneOf([

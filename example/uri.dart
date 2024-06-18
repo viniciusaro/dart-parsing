@@ -8,9 +8,19 @@ class RequestInput extends Equatable {
       : pathSegments = List.from(source.pathSegments),
         queryParameters = Map.from(source.queryParameters);
 
-  RequestInput._(this.pathSegments, this.queryParameters);
+  RequestInput._(List<String> pathSegments, Map<String, String> queryParameters)
+      : pathSegments = List.from(pathSegments),
+        queryParameters = Map.from(queryParameters);
+
   factory RequestInput.empty() => RequestInput._([], {});
   factory RequestInput.uri(String string) => RequestInput(Uri.parse(string));
+
+  RequestInput copy() {
+    return RequestInput._(
+      pathSegments,
+      queryParameters,
+    );
+  }
 
   @override
   List<Object?> get props => [pathSegments, queryParameters];

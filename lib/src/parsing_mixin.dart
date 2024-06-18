@@ -1,7 +1,39 @@
 import 'package:parsing/fp.dart';
 
 mixin ParserMixin<Input, A> {
-  (A?, Input) run(Input input);
+  (A, Input) run(Input input);
+}
+
+class ParserError {
+  final String expected;
+  final dynamic remainingInput;
+
+  ParserError({required this.expected, required this.remainingInput});
+
+  factory ParserError.fromMany(List<ParserError> errors) {
+    return ParserError(
+      expected: errors.map((error) => error.expected).join(" "),
+      remainingInput: errors.map((error) => error.remainingInput).join(" "),
+    );
+  }
+
+  static ParserError fromError(dynamic error) {
+    return error is ParserError
+        ? error
+        : ParserError(
+            expected: error,
+            remainingInput: "",
+          );
+  }
+
+  @override
+  String toString() {
+    return """
+    Parser Error:
+    expected: $expected
+    remaining: $remainingInput
+    """;
+  }
 }
 
 extension ParserMixinTransformations<Input, A> on ParserMixin<Input, A> {
@@ -20,19 +52,6 @@ extension ParserMixinTransformations<Input, A> on ParserMixin<Input, A> {
   Skip<Input, A, B> skip<B>(ParserMixin<Input, B> other) {
     return Skip(this, other);
   }
-
-  DebugParser<Input, A> debug() {
-    return DebugParser(this);
-  }
-
-  (A?, Input, String?) runWithDebug(Input input) {
-    final (result, rest) = this.run(input);
-    final id = this.runtimeType.toString();
-    if (result == null) {
-      return (null, input, id);
-    }
-    return (result, rest, null);
-  }
 }
 
 class OneOf<I, O> with ParserMixin<I, O> {
@@ -40,14 +59,16 @@ class OneOf<I, O> with ParserMixin<I, O> {
   OneOf(this.parsers);
 
   @override
-  (O?, I) run(I input) {
+  (O, I) run(I input) {
+    final List<ParserError> failures = [];
     for (final parser in parsers) {
-      final (result, rest) = parser.run(input);
-      if (result != null) {
-        return (result, rest);
+      try {
+        return parser.run(input);
+      } catch (e) {
+        failures.add(ParserError.fromError(e));
       }
     }
-    return (null, input);
+    throw ParserError.fromMany(failures);
   }
 }
 
@@ -58,28 +79,9 @@ class MapParser<Input, B> with ParserMixin<Input, B> {
   MapParser(this.other, this.t);
 
   @override
-  (B?, Input) run(Input input) {
+  (B, Input) run(Input input) {
     final (a, rest) = other.run(input);
-    if (a == null) {
-      return (null, rest);
-    }
     return (t(a), rest);
-  }
-}
-
-class DebugParser<Input, A> with ParserMixin<Input, A> {
-  final ParserMixin<Input, A> thisParser;
-
-  DebugParser(this.thisParser);
-
-  @override
-  (A?, Input) run(Input input) {
-    final (result, rest) = thisParser.run(input);
-    if (result == null) {
-      print("Error stack: ${StackTrace.current}");
-      return (null, input);
-    }
-    return (result, rest);
   }
 }
 
@@ -90,17 +92,23 @@ class TakeParser<Input, A, B> with ParserMixin<Input, (A, B)> {
   TakeParser(this.parserA, this.parserB);
 
   @override
-  ((A, B)?, Input) run(Input input) {
-    final (resultA, restA) = parserA.run(input);
-    if (resultA == null) {
-      return (null, input);
+  ((A, B), Input) run(Input input) {
+    late (A, Input) tupleA;
+    late (B, Input) tupleB;
+
+    try {
+      tupleA = parserA.run(input);
+    } catch (e) {
+      throw ParserError.fromError(e);
     }
 
-    final (resultB, restB) = parserB.run(restA);
-    if (resultB == null) {
-      return (null, input);
+    try {
+      tupleB = parserB.run(tupleA.$2);
+    } catch (e) {
+      throw ParserError.fromError(e);
     }
-    return ((resultA, resultB), restB);
+
+    return ((tupleA.$1, tupleB.$1), tupleB.$2);
   }
 }
 
@@ -111,7 +119,7 @@ class TakeParser3<Input, A, B, C> with ParserMixin<Input, (A, B, C)> {
   TakeParser3(this.parserAB, this.parserC);
 
   @override
-  ((A, B, C)?, Input) run(Input input) {
+  ((A, B, C), Input) run(Input input) {
     return TakeParser(parserAB, parserC)
         .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$2))
         .run(input);
@@ -125,7 +133,7 @@ class TakeParser4<Input, A, B, C, D> with ParserMixin<Input, (A, B, C, D)> {
   TakeParser4(this.parserABC, this.parserD);
 
   @override
-  ((A, B, C, D)?, Input) run(Input input) {
+  ((A, B, C, D), Input) run(Input input) {
     return TakeParser(parserABC, parserD)
         .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$1.$3, tuple.$2))
         .run(input);
@@ -139,7 +147,7 @@ class TakeFromUnitParser<Input, A> with ParserMixin<Input, A> {
   TakeFromUnitParser(this.thisParser, this.otherParser);
 
   @override
-  (A?, Input) run(Input input) {
+  (A, Input) run(Input input) {
     return TakeParser(thisParser, otherParser)
         .map((tuple) => tuple.$2)
         .run(input);
@@ -153,7 +161,7 @@ class TakeUnitParser<Input, A> with ParserMixin<Input, A> {
   TakeUnitParser(this.thisParser, this.unitParser);
 
   @override
-  (A?, Input) run(Input input) {
+  (A, Input) run(Input input) {
     return TakeParser(thisParser, unitParser)
         .map((tuple) => tuple.$1)
         .run(input);
@@ -167,17 +175,23 @@ class Skip<Input, A, B> with ParserMixin<Input, A> {
   Skip(this.parserA, this.parserB);
 
   @override
-  (A?, Input) run(Input input) {
-    final (resultA, restA) = parserA.run(input);
-    if (resultA == null) {
-      return (null, input);
+  (A, Input) run(Input input) {
+    late (A, Input) tupleA;
+    late (B, Input) tupleB;
+
+    try {
+      tupleA = parserA.run(input);
+    } catch (e) {
+      throw ParserError.fromError(e);
     }
 
-    final (resultB, restB) = parserB.run(restA);
-    if (resultB == null) {
-      return (null, input);
+    try {
+      tupleB = parserB.run(tupleA.$2);
+    } catch (e) {
+      throw ParserError.fromError(e);
     }
-    return (resultA, restB);
+
+    return (tupleA.$1, tupleB.$2);
   }
 }
 
@@ -187,12 +201,8 @@ class SkipFirst<Input, A> with ParserMixin<Input, Unit> {
   SkipFirst(this.first);
 
   @override
-  (Unit?, Input) run(Input input) {
-    final (result, rest) = first.run(input);
-    if (result == null) {
-      return (null, input);
-    }
-    return (unit, rest);
+  (Unit, Input) run(Input input) {
+    return first.map((_) => unit).run(input);
   }
 }
 
@@ -203,12 +213,12 @@ class StringPrefix with ParserMixin<String, String> {
   StringPrefix(this.prefix, [this.group = 0]);
 
   @override
-  (String?, String) run(String input) {
+  (String, String) run(String input) {
     final regex = RegExp(prefix);
     final match = regex.matchAsPrefix(input);
     final group = match?.group(this.group);
     if (group == null) {
-      return (null, input);
+      throw ParserError(expected: prefix, remainingInput: input);
     }
     final rest = input.substring(group.length, input.length);
     return (group, rest);
@@ -219,7 +229,7 @@ class IntParser with ParserMixin<String, int> {
   IntParser();
 
   @override
-  (int?, String) run(String input) {
+  (int, String) run(String input) {
     return StringPrefix(r'\d+').map(int.parse).run(input);
   }
 }
@@ -230,12 +240,16 @@ class OptionalParser<I, O> with ParserMixin<I, Optional<O>> {
   OptionalParser(this.other);
 
   @override
-  (Optional<O>?, I) run(I input) {
-    final (result, rest) = other.run(input);
-    if (result == null) {
-      return (None(), rest);
+  (Optional<O>, I) run(I input) {
+    try {
+      final (result, rest) = other.run(input);
+      if (result == null) {
+        return (None(), rest);
+      }
+      return (Some(result), rest);
+    } catch (e) {
+      return (None(), input);
     }
-    return (Some(result), rest);
   }
 }
 
