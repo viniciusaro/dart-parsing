@@ -1,12 +1,15 @@
 part of 'example.dart';
 
-Parser<Optional<Uri>, O> uri<O>(Parser<RequestInput, O> requestInput) {
+Parser<Uri?, O> uri<O>(Parser<RequestInput, O> requestInput) {
   return Parser((uri) {
-    final (result, rest) = requestInput.run(RequestInput(uri.optional!));
+    final (result, rest) = requestInput.run(RequestInput(uri!));
     if (rest != RequestInput.empty()) {
-      return (null, uri);
+      throw ParserError(
+        expected: "request input to be fully consumed",
+        remainingInput: rest,
+      );
     }
-    return (result, None());
+    return (result, null);
   });
 }
 
@@ -14,11 +17,14 @@ Parser<RequestInput, O> path<O>(Parser<String, O> parser) {
   return Parser((input) {
     final segment = input.pathSegments.firstOrNull;
     if (segment == null) {
-      return (null, input);
+      throw ParserError(expected: "segment to parse", remainingInput: input);
     }
     final (result, rest) = parser.run(segment);
     if (rest.isNotEmpty) {
-      return (null, input);
+      throw ParserError(
+        expected: "segment to be fully consumed",
+        remainingInput: rest,
+      );
     }
     input.pathSegments.removeAt(0);
     return (result, input);
@@ -29,11 +35,14 @@ Parser<RequestInput, O> query<O>(String name, Parser<String, O> parser) {
   return Parser((input) {
     final param = input.queryParameters[name];
     if (param == null) {
-      return (null, input);
+      throw ParserError(expected: "param to parse", remainingInput: input);
     }
     final (result, rest) = parser.run(param);
     if (rest.isNotEmpty) {
-      return (null, input);
+      throw ParserError(
+        expected: "param to be fully consumed",
+        remainingInput: rest,
+      );
     }
     input.queryParameters.remove(name);
     return (result, input);
@@ -47,7 +56,7 @@ final episode = uri(
       .take(path(string.int))
       .take(optional(query("time", string.int)))
       .take(optional(query("speed", string.int.skip(string.prefix("x")))))
-      .map(Route.episodesOptional),
+      .map(Route.episodes),
 );
 
 // episodes/42/comments

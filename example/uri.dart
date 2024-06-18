@@ -28,11 +28,7 @@ class RequestInput extends Equatable {
 
 sealed class Route {
   static Route episodes((int, int?, int?) tuple) => Episodes.tuple(tuple);
-  static Route episodesOptional((int, Optional<int>, Optional<int>) tuple) =>
-      Episodes.tupleOptional(tuple);
-
-  static Route episodeComments(int id) => //
-      EpisodeComments(id: id);
+  static Route episodeComments(int id) => EpisodeComments(id: id);
 }
 
 class Episodes extends Route with EquatableMixin {
@@ -48,20 +44,7 @@ class Episodes extends Route with EquatableMixin {
   static Episodes tuple(
     (int, int?, int?) tuple,
   ) =>
-      Episodes(
-        id: tuple.$1,
-        time: tuple.$2,
-        speed: tuple.$3,
-      );
-
-  static Episodes tupleOptional(
-    (int, Optional<int>, Optional<int>) tuple,
-  ) =>
-      Episodes(
-        id: tuple.$1,
-        time: tuple.$2.optional,
-        speed: tuple.$3.optional,
-      );
+      Episodes(id: tuple.$1, time: tuple.$2, speed: tuple.$3);
 }
 
 class EpisodeComments extends Route with EquatableMixin {

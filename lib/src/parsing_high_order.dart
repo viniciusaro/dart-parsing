@@ -1,11 +1,13 @@
 part of 'parsing.dart';
 
 Parser<I, A> always<I, A>(A value) {
-  return Parser<I, A>((string) => (value, string));
+  return Parser<I, A>((input) => (value, input));
 }
 
 Parser<I, A> never<I, A>() {
-  return Parser<I, A>((string) => (null, string));
+  return Parser<I, A>(
+    (input) => throw ParserError(expected: "never", remainingInput: input),
+  );
 }
 
 Parser<I, I> prefix<I>(
@@ -16,7 +18,10 @@ Parser<I, I> prefix<I>(
   return Parser((input) {
     final matchResult = match(input, candidate);
     if (matchResult == null) {
-      return (null, input);
+      throw ParserError(
+        expected: "$input match $candidate",
+        remainingInput: input,
+      );
     }
     final rest = drop(input, matchResult);
     return (matchResult, rest);
@@ -25,23 +30,24 @@ Parser<I, I> prefix<I>(
 
 Parser<I, O> oneOf<I, O>(core.List<Parser<I, O>> parsers) {
   return Parser((input) {
+    final core.List<ParserError> failures = [];
     for (final parser in parsers) {
-      final (result, rest) = parser.run(input);
-      if (result != null) {
-        return (result, rest);
+      try {
+        return parser.run(input);
+      } catch (e) {
+        failures.add(ParserError.fromError(e));
       }
     }
-    return (null, input);
+    throw ParserError.fromMany(failures);
   });
 }
 
-Parser<I, Optional<O>> optional<I, O>(Parser<I, O> other) {
+Parser<I, O?> optional<I, O>(Parser<I, O> other) {
   return Parser((input) {
-    final (result, rest) = other.run(input);
-    if (result != null) {
-      return (Some(result), rest);
-    } else {
-      return (None<O>(), rest);
+    try {
+      return other.run(input);
+    } catch (e) {
+      return (null, input);
     }
   });
 }

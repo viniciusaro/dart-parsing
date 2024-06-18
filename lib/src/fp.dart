@@ -8,34 +8,6 @@ class Unit {
 }
 
 ///
-sealed class Optional<A> {
-  A? get optional {
-    final self = this;
-    switch (self) {
-      case Some<A>():
-        return self.value;
-      case None<A>():
-        return null;
-    }
-  }
-}
-
-class Some<A> extends Optional<A> {
-  final A value;
-  Some(this.value);
-
-  @override
-  int get hashCode => value.hashCode ^ 31;
-  bool operator ==(Object other) => other is Some<A> && other.value == value;
-}
-
-class None<A> extends Optional<A> {
-  @override
-  int get hashCode => A.hashCode ^ 31;
-  bool operator ==(Object other) => other is None<A> && A != dynamic;
-}
-
-///
 sealed class Result<A, F> {
   A? get value {
     final self = this;

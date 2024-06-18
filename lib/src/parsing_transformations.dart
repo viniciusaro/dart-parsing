@@ -4,33 +4,20 @@ extension ParserTransformations<I, A> on Parser<I, A> {
   Parser<I, B> map<B>(B Function(A) transform) {
     return Parser<I, B>((input) {
       final (a, rest) = run(input);
-      if (a == null) {
-        return (null, input);
-      }
       return (transform(a), rest);
     });
   }
 
   Parser<I, B> flatMap<B>(Parser<I, B> Function(A) transform) {
     return Parser<I, B>((input) {
-      final (a, restA) = run(input);
-      if (a == null) {
-        return (null, input);
-      }
-      final (b, restB) = transform(a).run(restA);
-      if (b == null) {
-        return (null, input);
-      }
-      return (b, restB);
+      final (a, rest) = run(input);
+      return transform(a).run(rest);
     });
   }
 
   Parser<I, A> skip<B>(Parser<I, B> other) {
     return Parser((input) {
       final (a, restA) = this.run(input);
-      if (a == null) {
-        return (null, input);
-      }
       final (_, restB) = other.run(restA);
       return (a, restB);
     });
@@ -62,15 +49,9 @@ extension ParserTuple4Extensions<I, A, B, C> on Parser<I, (A, B, C)> {
 }
 
 Parser<I, (A, B)> zip<I, A, B>(Parser<I, A> parserA, Parser<I, B> parserB) {
-  return Parser<I, (A, B)>((string) {
-    final (a, restA) = parserA.run(string);
-    if (a == null) {
-      return (null, string);
-    }
+  return Parser<I, (A, B)>((input) {
+    final (a, restA) = parserA.run(input);
     final (b, restB) = parserB.run(restA);
-    if (b == null) {
-      return (null, string);
-    }
     return ((a, b), restB);
   });
 }

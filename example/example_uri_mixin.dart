@@ -1,12 +1,12 @@
 part of 'example.dart';
 
-class UriParser<O> with ParserMixin<Optional<Uri>, O> {
+class UriParser<O> with ParserMixin<Uri?, O> {
   final ParserMixin<RequestInput, O> requestInputParser;
   UriParser(this.requestInputParser);
 
   @override
-  (O, Optional<Uri>) run(Optional<Uri> input) {
-    final nonOptionalInput = input.optional;
+  (O, Uri?) run(Uri? input) {
+    final nonOptionalInput = input;
     if (nonOptionalInput == null) {
       throw ParserError(expected: "non optional input", remainingInput: input);
     }
@@ -19,7 +19,7 @@ class UriParser<O> with ParserMixin<Optional<Uri>, O> {
         remainingInput: rest,
       );
     }
-    return (result, None());
+    return (result, null);
   }
 }
 
