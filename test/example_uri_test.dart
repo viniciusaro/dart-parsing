@@ -27,7 +27,7 @@ void main() {
 
   test("episode comments", () {
     expect(
-      routerMixin.run(Uri.parse("episodes/42?time=120&speed=2")),
+      routerMixin.run(Uri.parse("episodes/42?time=120&speed=2x")),
       (Episodes(id: 42, time: 120, speed: 2), null),
     );
 

@@ -6,13 +6,7 @@ class UriParser<O> with ParserMixin<Uri?, O> {
 
   @override
   (O, Uri?) run(Uri? input) {
-    final nonOptionalInput = input;
-    if (nonOptionalInput == null) {
-      throw ParserError(expected: "non optional input", remainingInput: input);
-    }
-
-    final requestInput = RequestInput(nonOptionalInput);
-    final (result, rest) = requestInputParser.run(requestInput);
+    final (result, rest) = requestInputParser.run(RequestInput(input!));
     if (rest != RequestInput.empty()) {
       throw ParserError(
         expected: "request input to be fully consumed",
@@ -96,7 +90,7 @@ class Query<O> with ParserMixin<RequestInput, O> {
 final episodeMixin = SkipFirst(Path(StringPrefix("episodes"))) //
     .take(Path(IntParser()))
     .take(OptionalParser(Query("time", IntParser())))
-    .take(OptionalParser(Query("speed", IntParser())))
+    .take(OptionalParser(Query("speed", IntParser().skip(StringPrefix("x")))))
     .takeUnit(End())
     .map(Route.episodes);
 
