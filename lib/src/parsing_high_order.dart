@@ -39,9 +39,9 @@ Parser<I, Optional<O>> optional<I, O>(Parser<I, O> other) {
   return Parser((input) {
     final (result, rest) = other.run(input);
     if (result != null) {
-      return (Optional.some(result), rest);
+      return (Some(result), rest);
     } else {
-      return (Optional.none(), rest);
+      return (None<O>(), rest);
     }
   });
 }

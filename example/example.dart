@@ -7,4 +7,5 @@ import 'package:parsing/string.dart' as string;
 part 'coordinate.dart';
 part 'example_coordinate.dart';
 part 'example_uri.dart';
+part 'example_uri_mixin.dart';
 part 'uri.dart';

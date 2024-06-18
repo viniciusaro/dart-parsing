@@ -1,15 +1,14 @@
 import 'dart:core';
 
+///
 final unit = const Unit._();
 
 class Unit {
   const Unit._();
 }
 
+///
 sealed class Optional<A> {
-  static Some<A> some<A>(A value) => Some<A>(value);
-  static None<A> none<A>() => None<A>();
-
   A? get optional {
     final self = this;
     switch (self) {
@@ -36,35 +35,37 @@ class None<A> extends Optional<A> {
   bool operator ==(Object other) => other is None<A> && A != dynamic;
 }
 
-C Function(A) pipe<A, B, C>(
-  B Function(A) f,
-  C Function(B) g,
-) {
-  return (a) => g(f(a));
+///
+sealed class Result<T, F> {}
+
+class Success<T, F> extends Result<T, F> {
+  final T value;
+  Success(this.value);
 }
 
-D Function(A) pipe3<A, B, C, D>(
-  B Function(A) f,
-  C Function(B) g,
-  D Function(C) h,
-) {
-  return (a) => h(g(f(a)));
+class Failure<T, F> extends Result<T, F> {
+  final F value;
+  Failure(this.value);
 }
 
-num multiply(num a, num b) {
-  return a * b;
+///
+extension FunctionPipe<A, B> on B Function(A) {
+  C Function(A) pipe<C>(
+    C Function(B) other,
+  ) {
+    return (a) => other(this(a));
+  }
 }
 
+///
+num multiply(num a, num b) => a * b;
+num multiplyTuple((num, num) tuple) => tuple.$1 * tuple.$2;
 Unit toUnit<A>(A value) => unit;
-
-num multiplyTuple((num, num) tuple) {
-  return tuple.$1 * tuple.$2;
-}
-
 double numToDouble(num a) => a.toDouble();
 int numToInt(num a) => a.toInt();
 String numToString(num a) => a.toString();
 
+///
 extension IterableExtensionStartsWith<T> on Iterable<T> {
   bool startsWith(Iterable<T> prefix) {
     if (prefix.length > this.length) {
