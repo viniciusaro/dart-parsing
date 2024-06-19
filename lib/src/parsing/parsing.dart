@@ -11,7 +11,13 @@ part 'skip.dart';
 part 'take.dart';
 
 mixin Parser<Input, A> {
-  (A, Input) run(Input input);
+  (A, Input) run(Input input) {
+    return body().run(input);
+  }
+
+  Parser<Input, A> body() {
+    return this;
+  }
 }
 
 extension ParserTransformations<Input, A> on Parser<Input, A> {

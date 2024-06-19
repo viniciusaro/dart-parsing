@@ -34,10 +34,9 @@ class TakeParser3<Input, A, B, C> with Parser<Input, (A, B, C)> {
   TakeParser3(this.parserAB, this.parserC);
 
   @override
-  ((A, B, C), Input) run(Input input) {
+  Parser<Input, (A, B, C)> body() {
     return TakeParser(parserAB, parserC)
-        .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$2))
-        .run(input);
+        .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$2));
   }
 }
 
@@ -48,10 +47,9 @@ class TakeParser4<Input, A, B, C, D> with Parser<Input, (A, B, C, D)> {
   TakeParser4(this.parserABC, this.parserD);
 
   @override
-  ((A, B, C, D), Input) run(Input input) {
+  Parser<Input, (A, B, C, D)> body() {
     return TakeParser(parserABC, parserD)
-        .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$1.$3, tuple.$2))
-        .run(input);
+        .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$1.$3, tuple.$2));
   }
 }
 
@@ -62,10 +60,8 @@ class TakeFromUnitParser<Input, A> with Parser<Input, A> {
   TakeFromUnitParser(this.thisParser, this.otherParser);
 
   @override
-  (A, Input) run(Input input) {
-    return TakeParser(thisParser, otherParser)
-        .map((tuple) => tuple.$2)
-        .run(input);
+  Parser<Input, A> body() {
+    return TakeParser(thisParser, otherParser).map((tuple) => tuple.$2);
   }
 }
 
@@ -76,9 +72,7 @@ class TakeUnitParser<Input, A> with Parser<Input, A> {
   TakeUnitParser(this.thisParser, this.unitParser);
 
   @override
-  (A, Input) run(Input input) {
-    return TakeParser(thisParser, unitParser)
-        .map((tuple) => tuple.$1)
-        .run(input);
+  Parser<Input, A> body() {
+    return TakeParser(thisParser, unitParser).map((tuple) => tuple.$1);
   }
 }
