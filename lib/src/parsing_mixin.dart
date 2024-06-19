@@ -234,6 +234,18 @@ class IntParser with ParserMixin<String, int> {
   }
 }
 
+class DoubleParser with ParserMixin<String, double> {
+  DoubleParser();
+
+  @override
+  (double, String) run(String input) {
+    return StringPrefix(r'\d+[,|.]?\d*')
+        .map((string) => string.replaceAll(",", "."))
+        .map(double.parse)
+        .run(input);
+  }
+}
+
 class OptionalParser<I, O> with ParserMixin<I, O?> {
   final ParserMixin<I, O> other;
 
