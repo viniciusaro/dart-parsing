@@ -1,0 +1,17 @@
+name: benchmarking
+description: A sample command-line application.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.4.0
+
+# Add regular dependencies here.
+dependencies:
+  benchmark_harness: ^2.2.2
+  parsing: 
+    path: ../
+
+dev_dependencies:
+  lints: ^3.0.0
+  test: ^1.24.0

@@ -5,5 +5,4 @@ environment:
 
 dev_dependencies:
   test: ^1.25.7
-  equatable: ^2.0.5
-  benchmark_harness: ^2.2.2
+  equatable: ^2.0.5  
