@@ -27,12 +27,12 @@ void main() {
 
   test("episode comments", () {
     expect(
-      routerMixin.run(Uri.parse("episodes/42?time=120&speed=2x")),
+      router.run(Uri.parse("episodes/42?time=120&speed=2x")),
       (Episodes(id: 42, time: 120, speed: 2), null),
     );
 
     expect(
-      routerMixin.run(Uri.parse("episodes/42/comments")),
+      router.run(Uri.parse("episodes/42/comments")),
       (EpisodeComments(id: 42), null),
     );
   });

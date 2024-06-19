@@ -1,8 +1,12 @@
 part of 'example.dart';
 
-Parser<Uri?, O> uri<O>(Parser<RequestInput, O> requestInput) {
-  return Parser((uri) {
-    final (result, rest) = requestInput.run(RequestInput(uri!));
+class UriParser<O> with Parser<Uri?, O> {
+  final Parser<RequestInput, O> requestInputParser;
+  UriParser(this.requestInputParser);
+
+  @override
+  (O, Uri?) run(Uri? input) {
+    final (result, rest) = requestInputParser.run(RequestInput(input!));
     if (rest != RequestInput.empty()) {
       throw ParserError(
         expected: "request input to be fully consumed",
@@ -10,11 +14,12 @@ Parser<Uri?, O> uri<O>(Parser<RequestInput, O> requestInput) {
       );
     }
     return (result, null);
-  });
+  }
 }
 
-Parser<RequestInput, Unit> end() {
-  return Parser((input) {
+class End with Parser<RequestInput, Unit> {
+  @override
+  (Unit, RequestInput) run(RequestInput input) {
     if (input != RequestInput.empty()) {
       throw ParserError(
         expected: "request input to be fully consumed",
@@ -22,11 +27,15 @@ Parser<RequestInput, Unit> end() {
       );
     }
     return (unit, input);
-  });
+  }
 }
 
-Parser<RequestInput, O> path<O>(Parser<String, O> parser) {
-  return Parser((input) {
+class Path<O> with Parser<RequestInput, O> {
+  final Parser<String, O> parser;
+  Path(this.parser);
+
+  @override
+  (O, RequestInput) run(RequestInput input) {
     final segment = input.pathSegments.firstOrNull;
     if (segment == null) {
       throw ParserError(
@@ -34,20 +43,28 @@ Parser<RequestInput, O> path<O>(Parser<String, O> parser) {
         remainingInput: input,
       );
     }
-    final (result, rest) = parser.run(segment);
-    if (rest.isNotEmpty) {
+
+    final (result, segmentRest) = parser.run(segment);
+    if (segmentRest.isNotEmpty) {
       throw ParserError(
         expected: "segment to be fully consumed",
-        remainingInput: rest,
+        remainingInput: input,
       );
     }
-    input.pathSegments.removeAt(0);
-    return (result, input);
-  });
+
+    final rest = input.copy();
+    rest.pathSegments.removeAt(0);
+    return (result, rest);
+  }
 }
 
-Parser<RequestInput, O> query<O>(String name, Parser<String, O> parser) {
-  return Parser((input) {
+class Query<O> with Parser<RequestInput, O> {
+  final String name;
+  final Parser<String, O> parser;
+  Query(this.name, this.parser);
+
+  @override
+  (O, RequestInput) run(RequestInput input) {
     final param = input.queryParameters[name];
     if (param == null) {
       throw ParserError(
@@ -55,36 +72,38 @@ Parser<RequestInput, O> query<O>(String name, Parser<String, O> parser) {
         remainingInput: input,
       );
     }
-    final (result, rest) = parser.run(param);
-    if (rest.isNotEmpty) {
+    final (result, paramRest) = parser.run(param);
+    if (paramRest.isNotEmpty) {
       throw ParserError(
         expected: "param to be fully consumed",
-        remainingInput: rest,
+        remainingInput: input,
       );
     }
-    input.queryParameters.remove(name);
-    return (result, input);
-  });
+
+    final rest = input.copy();
+    rest.queryParameters.remove(name);
+    return (result, rest);
+  }
 }
 
 // episodes/42
 // episodes/42?time=120&speed=2x
-final episode = path(string.prefix("episodes").map(toUnit))
-    .take(path(string.int))
-    .take(optional(query("time", string.int)))
-    .take(optional(query("speed", string.int.skip(string.prefix("x")))))
-    .takeUnit(end())
+final episode = Path(StringPrefix("episodes").map(toUnit))
+    .take(Path(IntParser()))
+    .take(OptionalParser(Query("time", IntParser())))
+    .take(OptionalParser(Query("speed", IntParser().skip(StringPrefix("x")))))
+    .takeUnit(End())
     .map(Route.episodes);
 
 // episodes/42/comments
-final episodeComments = path(string.prefix("episodes").map(toUnit))
-    .take(path(string.int))
-    .skip(path(string.prefix("comments")))
-    .takeUnit(end())
+final episodeComments = SkipFirst(Path(StringPrefix("episodes"))) //
+    .take(Path(IntParser()))
+    .skip(Path(StringPrefix("comments")))
+    .takeUnit(End())
     .map(Route.episodeComments);
 
-final router = uri(
-  oneOf([
+final router = UriParser(
+  OneOf([
     episode,
     episodeComments,
   ]),
