@@ -1,13 +1,13 @@
 part of 'parsing.dart';
 
-class OneOf<I, O> with Parser<I, O> {
-  final List<Parser<I, O>> parsers;
-  OneOf(this.parsers);
+class OneOf<Input, A> with Parser<Input, A> {
+  final List<Parser<Input, A>> upstreams;
+  OneOf(this.upstreams);
 
   @override
-  (O, I) run(I input) {
+  (A, Input) run(Input input) {
     final List<ParserError> failures = [];
-    for (final parser in parsers) {
+    for (final parser in upstreams) {
       try {
         return parser.run(input);
       } catch (e) {

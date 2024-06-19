@@ -1,78 +1,65 @@
 part of 'parsing.dart';
 
 class TakeParser<Input, A, B> with Parser<Input, (A, B)> {
-  final Parser<Input, A> parserA;
-  final Parser<Input, B> parserB;
+  final Parser<Input, A> upstreamA;
+  final Parser<Input, B> upstreamB;
 
-  TakeParser(this.parserA, this.parserB);
+  TakeParser(this.upstreamA, this.upstreamB);
 
   @override
   ((A, B), Input) run(Input input) {
-    late (A, Input) tupleA;
-    late (B, Input) tupleB;
-
-    try {
-      tupleA = parserA.run(input);
-    } catch (e) {
-      throw ParserError.fromError(e);
-    }
-
-    try {
-      tupleB = parserB.run(tupleA.$2);
-    } catch (e) {
-      throw ParserError.fromError(e);
-    }
-
+    final tupleA = upstreamA.run(input);
+    final tupleB = upstreamB.run(tupleA.$2);
     return ((tupleA.$1, tupleB.$1), tupleB.$2);
   }
 }
 
 class TakeParser3<Input, A, B, C> with Parser<Input, (A, B, C)> {
-  final Parser<Input, (A, B)> parserAB;
-  final Parser<Input, C> parserC;
+  final Parser<Input, (A, B)> upstreamAB;
+  final Parser<Input, C> upstreamC;
 
-  TakeParser3(this.parserAB, this.parserC);
+  TakeParser3(this.upstreamAB, this.upstreamC);
 
   @override
   Parser<Input, (A, B, C)> body() {
-    return TakeParser(parserAB, parserC)
+    return TakeParser(upstreamAB, upstreamC)
         .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$2));
   }
 }
 
 class TakeParser4<Input, A, B, C, D> with Parser<Input, (A, B, C, D)> {
-  final Parser<Input, (A, B, C)> parserABC;
-  final Parser<Input, D> parserD;
+  final Parser<Input, (A, B, C)> upstreamABC;
+  final Parser<Input, D> upstreamD;
 
-  TakeParser4(this.parserABC, this.parserD);
+  TakeParser4(this.upstreamABC, this.upstreamD);
 
   @override
   Parser<Input, (A, B, C, D)> body() {
-    return TakeParser(parserABC, parserD)
+    return TakeParser(upstreamABC, upstreamD)
         .map((tuple) => (tuple.$1.$1, tuple.$1.$2, tuple.$1.$3, tuple.$2));
   }
 }
 
 class TakeFromUnitParser<Input, A> with Parser<Input, A> {
-  final Parser<Input, Unit> thisParser;
-  final Parser<Input, A> otherParser;
+  final Parser<Input, Unit> upstreamUnit;
+  final Parser<Input, A> upstreamA;
 
-  TakeFromUnitParser(this.thisParser, this.otherParser);
+  TakeFromUnitParser(this.upstreamUnit, this.upstreamA);
 
   @override
   Parser<Input, A> body() {
-    return TakeParser(thisParser, otherParser).map((tuple) => tuple.$2);
+    return TakeParser(upstreamUnit, upstreamA).map((tuple) => tuple.$2);
   }
 }
 
 class TakeUnitParser<Input, A> with Parser<Input, A> {
-  final Parser<Input, A> thisParser;
-  final Parser<Input, Unit> unitParser;
+  final Parser<Input, A> upstreamA;
+  final Parser<Input, Unit> upstreamUnit;
 
-  TakeUnitParser(this.thisParser, this.unitParser);
+  TakeUnitParser(this.upstreamA, this.upstreamUnit);
 
   @override
   Parser<Input, A> body() {
-    return TakeParser(thisParser, unitParser).map((tuple) => tuple.$1);
+    return TakeParser(upstreamA, upstreamUnit).map((tuple) => tuple.$1);
   }
 }

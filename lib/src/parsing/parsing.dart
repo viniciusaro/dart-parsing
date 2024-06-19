@@ -21,8 +21,8 @@ mixin Parser<Input, A> {
 }
 
 extension ParserTransformations<Input, A> on Parser<Input, A> {
-  MapParser<Input, B> map<B>(B Function(A) transform) {
-    return MapParser(this, (dynamicA) => transform(dynamicA as A));
+  MapParser<Input, A, B> map<B>(B Function(A) transform) {
+    return MapParser(this, transform);
   }
 
   TakeParser<Input, A, B> take<B>(Parser<Input, B> other) {

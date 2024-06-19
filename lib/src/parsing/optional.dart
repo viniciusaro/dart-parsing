@@ -1,14 +1,14 @@
 part of 'parsing.dart';
 
-class OptionalParser<I, O> with Parser<I, O?> {
-  final Parser<I, O> other;
+class OptionalParser<Input, A> with Parser<Input, A?> {
+  final Parser<Input, A> upstream;
 
-  OptionalParser(this.other);
+  OptionalParser(this.upstream);
 
   @override
-  (O?, I) run(I input) {
+  (A?, Input) run(Input input) {
     try {
-      return other.run(input);
+      return upstream.run(input);
     } catch (e) {
       return (null, input);
     }

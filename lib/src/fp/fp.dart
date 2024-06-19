@@ -8,29 +8,6 @@ class Unit {
 }
 
 ///
-sealed class Result<A, F> {
-  A? get value {
-    final self = this;
-    switch (self) {
-      case Success<A, F>():
-        return self.value;
-      case Failure<A, F>():
-        return null;
-    }
-  }
-}
-
-class Success<A, F> extends Result<A, F> {
-  final A value;
-  Success(this.value);
-}
-
-class Failure<A, F> extends Result<A, F> {
-  final F failure;
-  Failure(this.failure);
-}
-
-///
 extension FunctionPipe<A, B> on B Function(A) {
   C Function(A) pipe<C>(
     C Function(B) other,
