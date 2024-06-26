@@ -1,7 +1,11 @@
 import 'package:parsing/fp.dart';
 
+part 'always.dart';
+part 'bool.dart';
 part 'double.dart';
+part 'flat_map.dart';
 part 'int.dart';
+part 'many.dart';
 part 'map.dart';
 part 'one_of.dart';
 part 'optional.dart';
@@ -23,6 +27,12 @@ mixin Parser<Input, A> {
 extension ParserTransformations<Input, A> on Parser<Input, A> {
   MapParser<Input, A, B> map<B>(B Function(A) transform) {
     return MapParser(this, transform);
+  }
+
+  FlatMapParser<Input, A, B> flatMap<B>(
+    Parser<Input, B> Function(A) transform,
+  ) {
+    return FlatMapParser(this, transform);
   }
 
   TakeParser<Input, A, B> take<B>(Parser<Input, B> other) {

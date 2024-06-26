@@ -7,6 +7,14 @@ class IntParser with Parser<String, int> {
   }
 }
 
+class IntParser2 with Parser<StringCollection, int> {
+  @override
+  (int, StringCollection) run(StringCollection input) {
+    final (result, rest) = IntParser().run(input.source);
+    return (result, rest.collection);
+  }
+}
+
 class IntParserCodeUnits with Parser<Iterable<int>, int> {
   @override
   (int, Iterable<int>) run(Iterable<int> input) {
