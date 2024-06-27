@@ -1,15 +1,6 @@
 part of 'parsing.dart';
 
-class DoubleParser with Parser<String, double> {
-  @override
-  Parser<String, double> body() {
-    return StringPrefix.pattern(r'\d+([,|.]\d*)?')
-        .map((string) => string.replaceAll(",", "."))
-        .map(double.parse);
-  }
-}
-
-class DoubleParserCodeUnitsPrefix with Parser<IterableCollection<int>, double> {
+class DoubleParser with Parser<IterableCollection<int>, double> {
   @override
   Parser<IterableCollection<int>, double> body() {
     final isDotOrComma = (int e) {
@@ -22,9 +13,9 @@ class DoubleParserCodeUnitsPrefix with Parser<IterableCollection<int>, double> {
           : tuple.$1.toDouble();
     };
 
-    return IntParserCodeUnitsPrefix()
+    return IntParser()
         .take(OptionalParser(IterableCollectionPrefix(isDotOrComma)))
-        .take(OptionalParser(IntParserCodeUnitsPrefix()))
+        .take(OptionalParser(IntParser()))
         .map(parseDoubleFromTuple);
   }
 }

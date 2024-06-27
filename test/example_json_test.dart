@@ -63,16 +63,16 @@ class FieldParser<A> with Parser<String, A> {
   }
 }
 
-final portabilityOption = //
-    FieldParser("title", stringThrough(","))
-        .take(FieldParser("detail", stringThrough(",")))
-        .take(FieldParser("value", IntParser()))
-        .take(FieldParser("exclusive", BoolParser()))
-        .map(PortabilityStepInputOption.new);
+// final portabilityOption = //
+//     FieldParser("title", stringThrough(","))
+//         .take(FieldParser("detail", stringThrough(",")))
+//         .take(FieldParser("value", IntParser()))
+//         .take(FieldParser("exclusive", BoolParser()))
+//         .map(PortabilityStepInputOption.new);
 
-void main() {
-  test("test", () {
-    final tuple = portabilityOption.run(subject).$1;
-    print("result: $tuple");
-  });
-}
+// void main() {
+//   test("test", () {
+//     final tuple = portabilityOption.run(subject).$1;
+//     print("result: $tuple");
+//   });
+// }
