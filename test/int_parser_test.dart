@@ -34,6 +34,7 @@ void main() {
 
   test("regex parser", () {
     expect(IntParserRegex().run("42"), (42, ""));
+    expect(IntParserRegex().run("42A"), (42, "A"));
   });
 
   test("code units parser", () {

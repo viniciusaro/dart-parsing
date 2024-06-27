@@ -1,8 +1,8 @@
 part of 'parsing.dart';
 
-typedef IntParserStringPrefix = IntParser;
+typedef IntParser = IntParserStringPrefix;
 
-class IntParser with Parser<String, int> {
+class IntParserStringPrefix with Parser<String, int> {
   @override
   Parser<String, int> body() {
     return StringPrefix(
