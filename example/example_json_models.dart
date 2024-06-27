@@ -47,14 +47,9 @@ class PortabilityStepInputOption {
   final bool exclusive;
 
   PortabilityStepInputOption(
-    (
-      StringCollection title,
-      StringCollection detail,
-      int value,
-      bool exclusive
-    ) tuple,
-  )   : this.title = tuple.$1.source,
-        this.detail = tuple.$2.source,
+    (String title, String detail, int value, bool exclusive) tuple,
+  )   : this.title = tuple.$1,
+        this.detail = tuple.$2,
         this.value = tuple.$3,
         this.exclusive = tuple.$4;
 }

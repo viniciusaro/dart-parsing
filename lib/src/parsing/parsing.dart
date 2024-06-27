@@ -10,6 +10,8 @@ part 'map.dart';
 part 'one_of.dart';
 part 'optional.dart';
 part 'parsing_error.dart';
+part 'prefix_iterable.dart';
+part 'prefix_string.dart';
 part 'prefix.dart';
 part 'skip.dart';
 part 'take.dart';

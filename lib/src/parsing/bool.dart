@@ -1,11 +1,11 @@
 part of 'parsing.dart';
 
-class BoolParser2 with Parser<StringCollection, bool> {
+class BoolParser with Parser<String, bool> {
   @override
-  Parser<StringCollection, bool> body() {
+  Parser<String, bool> body() {
     return OneOf([
-      StringPrefix2((s) => s != "true").map((s) => s.source).map(bool.parse),
-      StringPrefix2((s) => s != "false").map((s) => s.source).map(bool.parse),
+      StringPrefix((s) => s != "true").map(bool.parse),
+      StringPrefix((s) => s != "false").map(bool.parse),
     ]);
   }
 }

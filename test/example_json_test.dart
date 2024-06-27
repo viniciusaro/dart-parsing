@@ -36,25 +36,25 @@ final subject = """
 "exclusive": "true"
 """;
 
-StringPrefix2 stringThrough(String other) =>
-    StringPrefix2((e) => !e.endsWith(other));
+StringPrefix stringThrough(String other) =>
+    StringPrefix((e) => !e.endsWith(other));
 
-class FieldParser<A> with Parser<StringCollection, A> {
+class FieldParser<A> with Parser<String, A> {
   final String name;
-  final Parser<StringCollection, A> content;
+  final Parser<String, A> content;
 
   FieldParser(this.name, this.content);
 
   @override
-  (A, StringCollection) run(StringCollection input) {
-    final fieldNameParser = StringPrefix2((e) {
+  (A, String) run(String input) {
+    final fieldNameParser = StringPrefix((e) {
       return e != "\"$name\": \"";
     });
 
     final (_, fieldNameRest) = fieldNameParser.run(input);
     final (content, contentRest) = this.content.run(fieldNameRest);
 
-    final endLineParser = StringPrefix2((e) {
+    final endLineParser = StringPrefix((e) {
       return !e.endsWith("\n");
     });
 
@@ -66,13 +66,13 @@ class FieldParser<A> with Parser<StringCollection, A> {
 final portabilityOption = //
     FieldParser("title", stringThrough(","))
         .take(FieldParser("detail", stringThrough(",")))
-        .take(FieldParser("value", IntParser2()))
-        .take(FieldParser("exclusive", BoolParser2()))
+        .take(FieldParser("value", IntParser()))
+        .take(FieldParser("exclusive", BoolParser()))
         .map(PortabilityStepInputOption.new);
 
 void main() {
   test("test", () {
-    final tuple = portabilityOption.run(subject.collection).$1;
+    final tuple = portabilityOption.run(subject).$1;
     print("result: $tuple");
   });
 }

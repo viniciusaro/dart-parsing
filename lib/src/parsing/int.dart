@@ -1,17 +1,57 @@
 part of 'parsing.dart';
 
+typedef IntParserStringPrefix = IntParser;
+
 class IntParser with Parser<String, int> {
   @override
   Parser<String, int> body() {
-    return StringPrefix(r'\d+').map(int.parse);
+    return StringPrefix(
+      (char) => char.codeUnits.first >= 48 && char.codeUnits.first <= 57,
+    ).map(int.parse);
   }
 }
 
-class IntParser2 with Parser<StringCollection, int> {
+class IntParserCodeUnitsPrefix with Parser<IterableCollection<int>, int> {
   @override
-  (int, StringCollection) run(StringCollection input) {
-    final (result, rest) = IntParser().run(input.source);
-    return (result, rest.collection);
+  (int, IterableCollection<int>) run(IterableCollection<int> input) {
+    final parser = Prefix<IterableCollection<int>, int>(
+      (unit) => unit >= 48 && unit <= 57,
+    );
+    final (result, rest) = parser.run(input);
+    return (int.parse(String.fromCharCodes(result.source)), rest);
+  }
+}
+
+class IntParserRunesPrefix with Parser<IterableCollection<int>, int> {
+  @override
+  (int, IterableCollection<int>) run(IterableCollection<int> input) {
+    final parser = Prefix<IterableCollection<int>, int>(
+      (rune) => rune >= 48 && rune <= 57,
+    );
+    final (result, rest) = parser.run(input);
+    return (int.parse(String.fromCharCodes(result.source)), rest);
+  }
+}
+
+class IntParserBytesPrefix with Parser<IterableCollection<int>, int> {
+  @override
+  (int, IterableCollection<int>) run(IterableCollection<int> input) {
+    final parser = Prefix<IterableCollection<int>, int>(
+      (rune) => rune >= 48 && rune <= 57,
+    );
+    final (result, rest) = parser.run(input);
+    return (int.parse(String.fromCharCodes(result.source)), rest);
+  }
+}
+
+class IntParserRegex with Parser<String, int> {
+  @override
+  (int, String) run(String input) {
+    final regex = RegExp(r'\d+');
+    final match = regex.matchAsPrefix(input);
+    final group = match?.group(0) ?? "";
+    final rest = input.substring(group.length, input.length);
+    return (int.parse(group), rest);
   }
 }
 
@@ -25,13 +65,8 @@ class IntParserCodeUnits with Parser<Iterable<int>, int> {
       throw ParserError(expected: "an integer", remainingInput: input);
     }
 
-    final remainingUnits = codeUnits.toList().getRange(
-          intUnits.length,
-          codeUnits.length,
-        );
-
-    final result = int.parse(String.fromCharCodes(remainingUnits));
-
+    final remainingUnits = codeUnits.skip(intUnits.length);
+    final result = int.parse(String.fromCharCodes(intUnits));
     return (result, remainingUnits);
   }
 }
