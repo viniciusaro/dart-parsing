@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   test("code units prefix", () {
-    final parser = DoubleParserCodeUnitsPrefix();
+    final parser = DoubleParser();
 
     final (result1, rest1) = parser.run("42.1".codeUnits.collection);
     expect(result1, 42.1);

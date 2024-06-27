@@ -24,6 +24,11 @@ class IterableCollection<E>
 
   bool operator ==(Object other) =>
       other is Iterable<E> ? IterableEquality().equals(source, other) : false;
+
+  @override
+  String toString() {
+    return source.toString();
+  }
 }
 
 extension IterableExtensions<E> on Iterable<E> {
