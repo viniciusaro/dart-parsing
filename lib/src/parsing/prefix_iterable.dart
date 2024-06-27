@@ -18,6 +18,12 @@ class IterableCollection<E>
   IterableCollection<E> removeFirst(int count) {
     return IterableCollection(source.skip(count));
   }
+
+  @override
+  int get hashCode => source.hashCode;
+
+  bool operator ==(Object other) =>
+      other is Iterable<E> ? IterableEquality().equals(source, other) : false;
 }
 
 extension IterableExtensions<E> on Iterable<E> {

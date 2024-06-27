@@ -19,133 +19,156 @@ final _suffix = List.generate(100000, (_) => _lipsum).join("\n");
 final _subject = "1234567891234567891$_suffix";
 const _intResult = 1234567891234567891;
 
+class Subject<Input, A> {
+  final Input subject;
+  final Input rest;
+  final A result;
+
+  Subject({required this.subject, required this.rest, required this.result});
+}
+
 class BenchmarkIntParserStringPrefix extends BenchmarkBase {
   late IntParser parser;
+  late Subject<String, int> sub;
 
   BenchmarkIntParserStringPrefix() : super("IntParserStringPrefix");
 
   @override
   void setup() {
     parser = IntParser();
+    sub = Subject(subject: _subject, rest: _suffix, result: _intResult);
     super.setup();
   }
 
   @override
   void run() {
-    final (result, rest) = parser.run(_subject);
-    assert(result == _intResult);
-    assert(rest == _suffix);
+    final (result, rest) = parser.run(sub.subject);
+    assert(result == sub.result);
+    assert(rest == sub.rest);
   }
 }
 
 class BenchmarkIntParserCodeUnits extends BenchmarkBase {
   late IntParserCodeUnits parser;
-  late Iterable<int> iterable;
-  late Iterable<int> restIterable;
+  late Subject<Iterable<int>, int> sub;
 
   BenchmarkIntParserCodeUnits() : super("IntParserCodeUnits");
 
   @override
   void setup() {
     parser = IntParserCodeUnits();
-    iterable = _subject.codeUnits;
-    restIterable = _suffix.codeUnits;
+    sub = Subject(
+      subject: _subject.codeUnits,
+      rest: _suffix.codeUnits,
+      result: _intResult,
+    );
     super.setup();
   }
 
   @override
   void run() {
-    final (result, rest) = parser.run(iterable);
-    assert(result == _intResult);
-    assert(rest == _suffix.codeUnits);
+    final (result, rest) = parser.run(sub.subject);
+    assert(result == sub.result);
+    assert(rest == sub.rest);
   }
 }
 
 class BenchmarkIntParserCodeUnitsPrefix extends BenchmarkBase {
   late IntParserCodeUnitsPrefix parser;
-  late IterableCollection<int> iterable;
-  late Iterable<int> restIterable;
+  late Subject<IterableCollection<int>, int> sub;
 
   BenchmarkIntParserCodeUnitsPrefix() : super("IntParserCodeUnitsPrefix");
 
   @override
   void setup() {
     parser = IntParserCodeUnitsPrefix();
-    iterable = IterableCollection(_subject.codeUnits);
-    restIterable = _suffix.codeUnits;
+    sub = Subject(
+      subject: IterableCollection(_subject.codeUnits),
+      rest: IterableCollection(_suffix.codeUnits),
+      result: _intResult,
+    );
     super.setup();
   }
 
   @override
   void run() {
-    final (result, rest) = parser.run(iterable);
-    assert(result == _intResult);
-    assert(rest.source == _suffix.codeUnits);
+    final (result, rest) = parser.run(sub.subject);
+    assert(result == sub.result);
+    assert(rest == sub.rest);
   }
 }
 
 class BenchmarkIntParserRunesPrefix extends BenchmarkBase {
   late IntParserRunesPrefix parser;
-  late IterableCollection<int> iterable;
-  late Iterable<int> restIterable;
+  late Subject<IterableCollection<int>, int> sub;
 
   BenchmarkIntParserRunesPrefix() : super("IntParserRunesPrefix");
 
   @override
   void setup() {
     parser = IntParserRunesPrefix();
-    iterable = IterableCollection(_subject.runes);
-    restIterable = _suffix.runes;
+    sub = Subject(
+      subject: IterableCollection(_subject.runes),
+      rest: IterableCollection(_suffix.runes),
+      result: _intResult,
+    );
     super.setup();
   }
 
   @override
   void run() {
-    final (result, rest) = parser.run(iterable);
-    assert(result == _intResult);
-    assert(rest.source == _suffix.runes);
+    final (result, rest) = parser.run(sub.subject);
+    assert(result == sub.result);
+    assert(rest == sub.rest);
   }
 }
 
 class BenchmarkIntParserBytesPrefix extends BenchmarkBase {
   late IntParserBytesPrefix parser;
-  late IterableCollection<int> iterable;
-  late Iterable<int> restIterable;
+  late Subject<IterableCollection<int>, int> sub;
 
   BenchmarkIntParserBytesPrefix() : super("IntParserBytesPrefix");
 
   @override
   void setup() {
     parser = IntParserBytesPrefix();
-    iterable = IterableCollection(utf8.encode(_subject));
-    restIterable = utf8.encode(_suffix);
+    sub = Subject(
+      subject: IterableCollection(utf8.encode(_subject)),
+      rest: IterableCollection(utf8.encode(_suffix)),
+      result: _intResult,
+    );
     super.setup();
   }
 
   @override
   void run() {
-    final (result, rest) = parser.run(iterable);
-    assert(result == _intResult);
-    assert(rest.source == restIterable);
+    final (result, rest) = parser.run(sub.subject);
+    assert(result == sub.result);
+    assert(rest == sub.rest);
   }
 }
 
 class BenchmarkIntParserRegex extends BenchmarkBase {
   late IntParserRegex parser;
-  late Iterable<int> codeUnits;
+  late Subject<String, int> sub;
 
   BenchmarkIntParserRegex() : super("IntParserRegex");
 
   @override
   void setup() {
     parser = IntParserRegex();
+    sub = Subject(
+      subject: _subject,
+      rest: _suffix,
+      result: _intResult,
+    );
     super.setup();
   }
 
   @override
   void run() {
-    final (result, rest) = parser.run(_subject);
-    assert(result == _intResult);
-    assert(rest == _suffix);
+    final (result, rest) = parser.run(sub.subject);
+    assert(result == sub.result);
+    assert(rest == sub.rest);
   }
 }

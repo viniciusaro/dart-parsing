@@ -6,3 +6,6 @@ environment:
 dev_dependencies:
   test: ^1.25.7
   equatable: ^2.0.5  
+
+dependencies:
+  collection: ^1.19.0
