@@ -1,7 +1,4 @@
-import 'package:benchmarking/parser_benchmark.dart';
-import 'package:benchmarking/parser_benchmark_helpers.dart';
 import 'package:benchmarking/parsers.dart';
-
 import 'package:parsing/parsing.dart';
 
 final doubleMaxDoubleSuite = BenchmarkSuite("Double parsers, max double", () {
