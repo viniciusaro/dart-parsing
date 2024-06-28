@@ -3,8 +3,12 @@ import 'package:benchmarking/parsers.dart';
 
 void main() {
   test("string starts with", () {
-    final (result, rest) = StringStartsWith("Brasília").run("Brasília/DF");
-    expect(result, "Brasília");
-    expect(rest, "/DF");
+    final parser = StringPrefix.literal("Brasília");
+
+    for (var i = 0; i < 10; i++) {
+      final (result, rest) = parser.run("Brasília$lipsum");
+      expect(result, "Brasília");
+      expect(rest, lipsum);
+    }
   });
 }

@@ -31,10 +31,10 @@ void main() {
     expect(IntParserRegex().run("42A"), (42, "A"));
   });
 
-  test("starts with parser", () {
-    expect(IntParserStringStartsWith().run("42"), (42, ""));
-    expect(IntParserStringStartsWith().run("42A"), (42, "A"));
-  });
+  // test("starts with parser", () {
+  //   expect(IntParserStringStartsWith().run("42"), (42, ""));
+  //   expect(IntParserStringStartsWith().run("42A"), (42, "A"));
+  // });
 
   test("code units parser", () {
     final (result, rest) = IntParserCodeUnits().run("42".codeUnits);

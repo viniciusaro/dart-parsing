@@ -7,7 +7,9 @@ void main(List<String> arguments) {
   // cli.doubleMaxDoubleSuite.report();
   // cli.doubleLongSuffixSuite.report();
 
-  cli.stringPrefix.report();
+  cli.stringOperationsSuite.report();
+  cli.stringPrefixSuite.report();
+  cli.stringPrefixLongSuffixSuite.report();
 
   // final repeat = 1000000;
   // cli.BenchmarkNestedFunctionsCall(repeat).report();

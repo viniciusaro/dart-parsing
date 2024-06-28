@@ -36,8 +36,8 @@ final subject = """
 "exclusive": "true"
 """;
 
-StringPrefix stringThrough(String other) =>
-    StringPrefix((e) => !e.endsWith(other));
+// StringPrefix stringThrough(String other) =>
+//     StringPrefix((e) => !e.endsWith(other));
 
 class FieldParser<A> with Parser<String, A> {
   final String name;
@@ -47,19 +47,20 @@ class FieldParser<A> with Parser<String, A> {
 
   @override
   (A, String) run(String input) {
-    final fieldNameParser = StringPrefix((e) {
-      return e != "\"$name\": \"";
-    });
+    // final fieldNameParser = StringPrefix((e) {
+    //   return e != "\"$name\": \"";
+    // });
 
-    final (_, fieldNameRest) = fieldNameParser.run(input);
-    final (content, contentRest) = this.content.run(fieldNameRest);
+    // final (_, fieldNameRest) = fieldNameParser.run(input);
+    // final (content, contentRest) = this.content.run(fieldNameRest);
 
-    final endLineParser = StringPrefix((e) {
-      return !e.endsWith("\n");
-    });
+    // final endLineParser = StringPrefix((e) {
+    //   return !e.endsWith("\n");
+    // });
 
-    final (_, rest) = endLineParser.run(contentRest);
-    return (content, rest);
+    // final (_, rest) = endLineParser.run(contentRest);
+    // return (content, rest);
+    throw 1;
   }
 }
 

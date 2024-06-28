@@ -1,9 +1,9 @@
 part of 'parsing.dart';
 
 class Prefix<C extends RangeReplaceableCollection<C, E>, E> with Parser<C, C> {
-  final bool Function(E)? predicate;
+  final bool Function(E) predicate;
 
-  Prefix([this.predicate]);
+  Prefix(this.predicate);
 
   @override
   (C, C) run(C input) {
@@ -11,7 +11,7 @@ class Prefix<C extends RangeReplaceableCollection<C, E>, E> with Parser<C, C> {
     late C rest;
 
     try {
-      match = predicate != null ? input.prefix(predicate!) : input;
+      match = input.prefix(predicate);
       rest = input.removeFirst(match.length);
     } catch (e, s) {
       final error = ParserError(

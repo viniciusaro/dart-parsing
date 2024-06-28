@@ -10,10 +10,6 @@ final doubleMaxDoubleSuite = BenchmarkSuite("Double parsers, max double", () {
       input: string.codeUnits.collection,
       result: doubleResult,
     ),
-    DoubleParserRegex().bench(
-      input: string,
-      result: doubleResult,
-    ),
   ];
 });
 
@@ -25,10 +21,6 @@ final doubleLongSuffixSuite = BenchmarkSuite("Double parsers, long suffix", () {
   return [
     DoubleParser().bench(
       input: string.codeUnits.collection,
-      result: doubleResult,
-    ),
-    DoubleParserRegex().bench(
-      input: string,
       result: doubleResult,
     ),
   ];

@@ -1,6 +1,18 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:parsing/parsing.dart';
 
+class OperationBenchmark extends BenchmarkBase {
+  final void Function() operation;
+
+  OperationBenchmark(String name, this.operation) : super("Operation - $name");
+
+  @override
+  void run() {
+    operation();
+    super.run();
+  }
+}
+
 class ParserBenchmark<Input, A> extends BenchmarkBase {
   final Parser<Input, A> Function() parserBuilder;
   final ParserBenchmarkData<Input, A> Function() subjectBuilder;

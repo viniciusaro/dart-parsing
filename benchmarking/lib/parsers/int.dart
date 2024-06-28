@@ -1,12 +1,12 @@
 import 'package:benchmarking/parsers.dart';
 import 'package:parsing/parsing.dart';
 
-class IntParserStringStartsWith with Parser<String, int> {
-  @override
-  Parser<String, int> body() {
-    return StringStartsWith(RegExp(r'\d+')).map(int.parse);
-  }
-}
+// class IntParserStringStartsWith with Parser<String, int> {
+//   @override
+//   Parser<String, int> body() {
+//     return StringLiteral(RegExp(r'\d+')).map(int.parse);
+//   }
+// }
 
 class IntParserStringPrefix with Parser<String, int> {
   @override
