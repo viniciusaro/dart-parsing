@@ -37,7 +37,7 @@ void main() {
   // });
 
   test("code units parser", () {
-    final (result, rest) = IntParserCodeUnits().run("42".codeUnits);
+    final (result, rest) = IntParserCodeUnits().run("42".codeUnits.collection);
     expect(result, 42);
     expect(rest, []);
   });

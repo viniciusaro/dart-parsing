@@ -1,4 +1,3 @@
-export 'parsers/double.dart';
 export 'parsers/int.dart';
 export 'parsers/string.dart';
 

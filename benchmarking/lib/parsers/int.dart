@@ -1,13 +1,6 @@
 import 'package:benchmarking/parsers.dart';
 import 'package:parsing/parsing.dart';
 
-// class IntParserStringStartsWith with Parser<String, int> {
-//   @override
-//   Parser<String, int> body() {
-//     return StringLiteral(RegExp(r'\d+')).map(int.parse);
-//   }
-// }
-
 class IntParserStringPrefix with Parser<String, int> {
   @override
   Parser<String, int> body() {
@@ -50,18 +43,20 @@ class IntParserRegex with Parser<String, int> {
   }
 }
 
-class IntParserCodeUnits with Parser<Iterable<int>, int> {
+class IntParserCodeUnits with Parser<IterableCollection<int>, int> {
   @override
-  (int, Iterable<int>) run(Iterable<int> input) {
+  (int, IterableCollection<int>) run(IterableCollection<int> input) {
     final codeUnits = input;
-    final intUnits = codeUnits.takeWhile((unit) => unit >= 48 && unit <= 57);
+    final intUnits = codeUnits.source.takeWhile(
+      (unit) => unit >= 48 && unit <= 57,
+    );
 
     if (intUnits.isEmpty) {
       throw ParserError(expected: "an integer", remainingInput: input);
     }
 
-    final remainingUnits = codeUnits.skip(intUnits.length);
+    final remainingUnits = codeUnits.source.skip(intUnits.length);
     final result = int.parse(String.fromCharCodes(intUnits));
-    return (result, remainingUnits);
+    return (result, remainingUnits.collection);
   }
 }

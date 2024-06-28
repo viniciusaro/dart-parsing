@@ -21,7 +21,7 @@ final intMaxIntSuite = BenchmarkSuite("Int parsers, max int", () {
       result: intResult,
     ),
     IntParserCodeUnits().bench(
-      input: string.codeUnits,
+      input: string.codeUnits.collection,
       result: intResult,
     ),
     IntParserRunesPrefix().bench(
@@ -54,7 +54,7 @@ final intLongSuffixSuite = BenchmarkSuite("Int parsers, long suffix", () {
       result: intResult,
     ),
     IntParserCodeUnits().bench(
-      input: string.codeUnits,
+      input: string.codeUnits.collection,
       result: intResult,
     ),
     IntParserRunesPrefix().bench(

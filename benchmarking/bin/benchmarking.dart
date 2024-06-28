@@ -1,15 +1,15 @@
 import 'package:benchmarking/cli.dart' as cli;
 
 void main(List<String> arguments) {
-  // cli.intMaxIntSuite.report();
-  // cli.intLongSuffixSuite.report();
+  cli.intMaxIntSuite.report();
+  cli.intLongSuffixSuite.report();
 
   // cli.doubleMaxDoubleSuite.report();
   // cli.doubleLongSuffixSuite.report();
 
-  cli.stringOperationsSuite.report();
-  cli.stringPrefixSuite.report();
-  cli.stringPrefixLongSuffixSuite.report();
+  // cli.stringOperationsSuite.report();
+  // cli.stringPrefixSuite.report();
+  // cli.stringPrefixLongSuffixSuite.report();
 
   // final repeat = 1000000;
   // cli.BenchmarkNestedFunctionsCall(repeat).report();
