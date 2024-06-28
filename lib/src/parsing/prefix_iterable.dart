@@ -37,3 +37,5 @@ extension IntegerIterableCollection on IterableCollection<int> {
 extension IterableExtensions<E> on Iterable<E> {
   IterableCollection<E> get collection => IterableCollection(this);
 }
+
+typedef StringCodeUnitsCollection = IterableCollection<int>;

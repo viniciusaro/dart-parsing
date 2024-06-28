@@ -31,7 +31,7 @@ class End with Parser<RequestInput, Unit> {
 }
 
 class Path<O> with Parser<RequestInput, O> {
-  final Parser<String, O> parser;
+  final Parser<StringCodeUnitsCollection, O> parser;
   Path(this.parser);
 
   @override
@@ -44,8 +44,8 @@ class Path<O> with Parser<RequestInput, O> {
       );
     }
 
-    final (result, segmentRest) = parser.run(segment);
-    if (segmentRest.isNotEmpty) {
+    final (result, segmentRest) = parser.run(segment.codeUnits.collection);
+    if (segmentRest.length > 0) {
       throw ParserError(
         expected: "segment to be fully consumed",
         remainingInput: input,
@@ -60,7 +60,7 @@ class Path<O> with Parser<RequestInput, O> {
 
 class Query<O> with Parser<RequestInput, O> {
   final String name;
-  final Parser<String, O> parser;
+  final Parser<StringCodeUnitsCollection, O> parser;
   Query(this.name, this.parser);
 
   @override
@@ -72,8 +72,8 @@ class Query<O> with Parser<RequestInput, O> {
         remainingInput: input,
       );
     }
-    final (result, paramRest) = parser.run(param);
-    if (paramRest.isNotEmpty) {
+    final (result, paramRest) = parser.run(param.codeUnits.collection);
+    if (paramRest.length > 0) {
       throw ParserError(
         expected: "param to be fully consumed",
         remainingInput: input,
@@ -88,23 +88,23 @@ class Query<O> with Parser<RequestInput, O> {
 
 // episodes/42
 // episodes/42?time=120&speed=2x
-// final episode = Path(StringPrefix("episodes").map(toUnit))
-//     .take(Path(IntParser()))
-//     .take(OptionalParser(Query("time", IntParser())))
-//     .take(OptionalParser(Query("speed", IntParser().skip(StringPrefix("x")))))
-//     .takeUnit(End())
-//     .map(Route.episodes);
+final episode = Path(StringLiteral("episodes").map(toUnit))
+    .take(Path(IntParser()))
+    .take(OptionalParser(Query("time", IntParser())))
+    .take(OptionalParser(Query("speed", IntParser().skip(StringLiteral("x")))))
+    .takeUnit(End())
+    .map(Route.episodes);
 
-// // episodes/42/comments
-// final episodeComments = SkipFirst(Path(StringPrefix("episodes"))) //
-//     .take(Path(IntParser()))
-//     .skip(Path(StringPrefix("comments")))
-//     .takeUnit(End())
-//     .map(Route.episodeComments);
+// episodes/42/comments
+final episodeComments = SkipFirst(Path(StringLiteral("episodes"))) //
+    .take(Path(IntParser()))
+    .skip(Path(StringLiteral("comments")))
+    .takeUnit(End())
+    .map(Route.episodeComments);
 
-// final router = UriParser(
-//   OneOf([
-//     episode,
-//     episodeComments,
-//   ]),
-// );
+final router = UriParser(
+  OneOf([
+    episode,
+    episodeComments,
+  ]),
+);
