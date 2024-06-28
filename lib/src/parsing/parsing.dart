@@ -3,6 +3,7 @@ import 'package:parsing/fp.dart';
 
 part 'always.dart';
 part 'bool.dart';
+part 'collection.dart';
 part 'double.dart';
 part 'flat_map.dart';
 part 'int.dart';
@@ -11,7 +12,6 @@ part 'map.dart';
 part 'one_of.dart';
 part 'optional.dart';
 part 'parsing_error.dart';
-part 'prefix_iterable.dart';
 part 'prefix.dart';
 part 'skip.dart';
 part 'string.dart';

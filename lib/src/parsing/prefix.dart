@@ -30,14 +30,3 @@ class Prefix<C extends RangeReplaceableCollection<C, E>, E> with Parser<C, C> {
     return (match, rest);
   }
 }
-
-mixin RangeReplaceableCollection<Self, Element> on Collection<Self, Element> {
-  Self removeFirst(int count);
-}
-
-mixin Collection<Self, Element> {
-  int get length;
-  Self prefix(bool Function(Element) predicate);
-}
-
-typedef IterableCollectionPrefix<E> = Prefix<IterableCollection<E>, E>;

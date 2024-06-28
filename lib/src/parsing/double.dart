@@ -3,18 +3,19 @@ part of 'parsing.dart';
 class DoubleParser with Parser<IterableCollection<int>, double> {
   @override
   Parser<IterableCollection<int>, double> body() {
-    final isDotOrComma = (int e) {
-      return e == ".".codeUnits.first || e == ",".codeUnits.first;
-    };
+    final dotOrComma = OneOf([
+      StringLiteral(","),
+      StringLiteral("."),
+    ]);
 
-    final parseDoubleFromTuple = ((int, dynamic, int?) tuple) {
-      return tuple.$3 != null
-          ? double.parse("${tuple.$1}.${tuple.$3}")
+    final parseDoubleFromTuple = ((int, int?) tuple) {
+      return tuple.$2 != null
+          ? double.parse("${tuple.$1}.${tuple.$2}")
           : tuple.$1.toDouble();
     };
 
     return IntParser()
-        .take(OptionalParser(IterableCollectionPrefix(isDotOrComma)))
+        .skip(OptionalParser(dotOrComma))
         .take(OptionalParser(IntParser()))
         .map(parseDoubleFromTuple);
   }

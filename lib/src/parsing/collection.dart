@@ -1,5 +1,14 @@
 part of 'parsing.dart';
 
+mixin RangeReplaceableCollection<Self, Element> on Collection<Self, Element> {
+  Self removeFirst(int count);
+}
+
+mixin Collection<Self, Element> {
+  int get length;
+  Self prefix(bool Function(Element) predicate);
+}
+
 class IterableCollection<E>
     implements RangeReplaceableCollection<IterableCollection<E>, E> {
   final Iterable<E> source;
