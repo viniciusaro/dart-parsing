@@ -4,8 +4,10 @@ void main(List<String> arguments) {
   // cli.intMaxIntSuite.report();
   // cli.intLongSuffixSuite.report();
 
-  cli.doubleMaxDoubleSuite.report();
-  cli.doubleLongSuffixSuite.report();
+  // cli.doubleMaxDoubleSuite.report();
+  // cli.doubleLongSuffixSuite.report();
+
+  cli.stringPrefix.report();
 
   // final repeat = 1000000;
   // cli.BenchmarkNestedFunctionsCall(repeat).report();

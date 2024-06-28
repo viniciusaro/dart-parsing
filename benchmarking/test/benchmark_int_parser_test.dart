@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:benchmarking/parsers.dart';
+import 'package:benchmarking/parsers/int.dart';
 import 'package:parsing/src/parsing/parsing.dart';
 import 'package:test/test.dart';
 
@@ -28,6 +29,11 @@ void main() {
   test("regex parser", () {
     expect(IntParserRegex().run("42"), (42, ""));
     expect(IntParserRegex().run("42A"), (42, "A"));
+  });
+
+  test("starts with parser", () {
+    expect(IntParserStringStartsWith().run("42"), (42, ""));
+    expect(IntParserStringStartsWith().run("42A"), (42, "A"));
   });
 
   test("code units parser", () {

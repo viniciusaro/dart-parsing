@@ -1,5 +1,4 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:collection/collection.dart';
 import 'package:parsing/parsing.dart';
 
 class ParserBenchmark<Input, A> extends BenchmarkBase {
@@ -9,8 +8,8 @@ class ParserBenchmark<Input, A> extends BenchmarkBase {
   late Parser<Input, A> parser;
   late ParserBenchmarkData<Input, A> subject;
 
-  ParserBenchmark(this.parserBuilder, this.subjectBuilder)
-      : super(parserBuilder().runtimeType.toString());
+  ParserBenchmark(String? name, this.parserBuilder, this.subjectBuilder)
+      : super(name ?? parserBuilder().runtimeType.toString());
 
   @override
   void setup() {
@@ -22,7 +21,7 @@ class ParserBenchmark<Input, A> extends BenchmarkBase {
   @override
   void run() {
     final (result, _) = parser.run(subject.input);
-    assert(Equality().equals(result, subject.result));
+    assert(result == subject.result);
   }
 }
 
@@ -35,10 +34,12 @@ class ParserBenchmarkData<Input, A> {
 
 extension ParserBenchmarking<Input, A> on Parser<Input, A> {
   ParserBenchmark<Input, A> bench({
+    String? name,
     required Input input,
     required A result,
   }) {
     return ParserBenchmark(
+      name,
       () => this,
       () => ParserBenchmarkData(input: input, result: result),
     );
@@ -55,7 +56,9 @@ class BenchmarkSuite extends BenchmarkBase {
     print("\nRunning suite: $name");
     print("-------------");
 
-    for (var bench in benchmarks()) {
+    final benchmarks = this.benchmarks();
+
+    for (var bench in benchmarks) {
       bench.report();
     }
   }

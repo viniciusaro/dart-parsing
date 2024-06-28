@@ -6,14 +6,28 @@ class StringPrefix with Parser<String, String> {
   StringPrefix([this.predicate]);
 
   factory StringPrefix.pattern(String pattern) {
+    var accumulator = "";
     return StringPrefix((string) {
-      final regex = RegExp(pattern);
-      return regex.matchAsPrefix(string) != null;
+      accumulator += string;
+      final regex = RegExp(accumulator);
+      final result = regex.matchAsPrefix(pattern) != null;
+      if (result == false) {
+        accumulator = "";
+      }
+      return result;
     });
   }
 
   factory StringPrefix.literal(String literal) {
-    return StringPrefix.pattern(literal);
+    var accumulator = "";
+    return StringPrefix((string) {
+      accumulator += string;
+      final result = literal.startsWith(accumulator);
+      if (result == false) {
+        accumulator = "";
+      }
+      return result;
+    });
   }
 
   @override
@@ -52,4 +66,13 @@ class StringCollection
     }
     return StringCollection(prefix);
   }
+
+  @override
+  int get hashCode => source.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is String ? source == other : false;
+
+  @override
+  String toString() => source.toString();
 }

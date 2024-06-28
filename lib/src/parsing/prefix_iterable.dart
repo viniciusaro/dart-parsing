@@ -22,13 +22,12 @@ class IterableCollection<E>
   @override
   int get hashCode => source.hashCode;
 
+  @override
   bool operator ==(Object other) =>
       other is Iterable<E> ? IterableEquality().equals(source, other) : false;
 
   @override
-  String toString() {
-    return source.toString();
-  }
+  String toString() => source.toString();
 }
 
 extension IterableExtensions<E> on Iterable<E> {
