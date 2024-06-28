@@ -14,10 +14,12 @@ class Many<Input, A> with Parser<Input, List<A>> {
     final List<A> matches = [];
 
     while (hasNext) {
+      Input? beforeSeparatorRest;
       try {
         if (!isFirst) {
-          var separatorResult = separator?.run(rest).$2;
-          rest = separatorResult ?? rest;
+          var separatorRest = separator?.run(rest).$2;
+          beforeSeparatorRest = rest;
+          rest = separatorRest ?? rest;
         }
 
         var (match, upstreamRest) = upstream.run(rest);
@@ -25,6 +27,9 @@ class Many<Input, A> with Parser<Input, List<A>> {
         matches.add(match);
       } catch (_) {
         hasNext = false;
+        if (beforeSeparatorRest != null) {
+          rest = beforeSeparatorRest;
+        }
       }
       isFirst = false;
     }

@@ -30,6 +30,10 @@ class IterableCollection<E>
   String toString() => source.toString();
 }
 
+extension IntegerIterableCollection on IterableCollection<int> {
+  String get stringValue => String.fromCharCodes(source);
+}
+
 extension IterableExtensions<E> on Iterable<E> {
   IterableCollection<E> get collection => IterableCollection(this);
 }
