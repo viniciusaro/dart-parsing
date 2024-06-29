@@ -10,6 +10,7 @@ part 'int.dart';
 part 'many.dart';
 part 'map.dart';
 part 'one_of.dart';
+part 'one_or_more.dart';
 part 'optional.dart';
 part 'parsing_error.dart';
 part 'prefix.dart';

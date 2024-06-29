@@ -36,18 +36,3 @@ class Many<Input, A> with Parser<Input, List<A>> {
     return (matches, rest);
   }
 }
-
-class OneOrMore<Input, A> with Parser<Input, List<A>> {
-  final Parser<Input, A> upstream;
-  final Parser<Input, Unit>? separator;
-
-  OneOrMore(this.upstream, {this.separator});
-
-  @override
-  Parser<Input, List<A>> body() {
-    return upstream
-        .skip(separator ?? Always(unit))
-        .take(Many(upstream, separator: separator))
-        .map((tuple) => tuple.$2 + [tuple.$1]);
-  }
-}
