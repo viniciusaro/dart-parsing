@@ -4,7 +4,8 @@ class Many<Input, A> with Parser<Input, List<A>> {
   final Parser<Input, A> upstream;
   final Parser<Input, Unit>? separator;
 
-  Many(this.upstream, {this.separator});
+  Many(this.upstream, {Parser<Input, dynamic>? separator})
+      : separator = separator?.map(toUnit);
 
   @override
   (List<A>, Input) run(Input input) {

@@ -7,6 +7,17 @@ void main() {
       "Brasília/DF".codeUnits.collection,
     );
     expect(result, "Brasília");
-    expect(rest, "/DF");
+    expect(rest.source, "/DF".codeUnits);
+  });
+
+  test("string literal acute", () {
+    final eAcute0 = "é"; // String.fromCharCodes([0x00E9]);
+    final eAcute1 = "é"; // String.fromCharCodes([0x0065, 0x0301]);
+
+    final (result, rest) = StringLiteral(eAcute0.normalized).run(
+      eAcute1.normalized.codeUnits.collection,
+    );
+    expect(result, eAcute0.normalized);
+    expect(rest.source, []);
   });
 }

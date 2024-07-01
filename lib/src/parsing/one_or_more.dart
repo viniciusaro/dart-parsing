@@ -4,7 +4,8 @@ class OneOrMore<Input, A> with Parser<Input, List<A>> {
   final Parser<Input, A> upstream;
   final Parser<Input, Unit>? separator;
 
-  OneOrMore(this.upstream, {this.separator});
+  OneOrMore(this.upstream, {Parser<Input, dynamic>? separator})
+      : separator = separator?.map(toUnit);
 
   @override
   Parser<Input, List<A>> body() {

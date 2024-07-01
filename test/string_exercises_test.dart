@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:unorm_dart/unorm_dart.dart' as unorm;
 
 import 'package:test/test.dart';
 
@@ -27,6 +28,26 @@ void main() {
 
     print("br: $br");
     print(String.fromCharCodes(br.expand((e) => e.runes.toList())));
+  });
+
+  test("e acute", () {
+    const eAcute0 = "é"; // String.fromCharCodes([0x00E9]);
+    const eAcute1 = "é"; // String.fromCharCodes([0x0065, 0x0301]);
+    final normalized0 = unorm.nfc(eAcute0);
+    final normalized1 = unorm.nfc(eAcute1);
+
+    print(eAcute0);
+    print(eAcute0.codeUnits);
+    print(normalized0.codeUnits);
+    print("---");
+    print(eAcute1);
+    print(eAcute1.codeUnits);
+    print(normalized1.codeUnits);
+
+    expect("a" == "a", isTrue);
+    expect(eAcute0 != eAcute1, isTrue);
+    expect(eAcute0.codeUnits != eAcute1.codeUnits, isTrue);
+    expect(normalized0 == normalized1, isTrue);
   });
 
   test("zero", () {

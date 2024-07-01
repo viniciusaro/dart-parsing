@@ -2,7 +2,7 @@ part of 'parsing.dart';
 
 class StringLiteral with Parser<IterableCollection<int>, String> {
   final String literal;
-  final List<int> literalCodeUnits;
+  final Iterable<int> literalCodeUnits;
 
   StringLiteral(this.literal) : literalCodeUnits = literal.codeUnits;
 
@@ -18,4 +18,8 @@ class StringLiteral with Parser<IterableCollection<int>, String> {
       remainingInput: input.source,
     );
   }
+}
+
+extension StringUnicodeNormalization on String {
+  String get normalized => unorm.nfc(this);
 }

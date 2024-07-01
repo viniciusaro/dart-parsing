@@ -9,3 +9,4 @@ dev_dependencies:
 
 dependencies:
   collection: ^1.19.0
+  unorm_dart: ^0.3.0
