@@ -5,7 +5,7 @@ import '../example/example.dart';
 
 void main() {
   test("many returns all values that match, when there are many", () {
-    final input = "BSB, BSB, BSB";
+    final input = "Brasília, Brasília, Brasília";
     final parser = Many(city, separator: StringLiteral(", "));
     final (result, rest) = parser.run(input.codeUnits.collection);
 
@@ -14,7 +14,7 @@ void main() {
   });
 
   test("many returns single value when there is only one", () {
-    final input = "BSB";
+    final input = "Brasília";
     final parser = Many(city, separator: StringLiteral(", "));
     final (result, rest) = parser.run(input.codeUnits.collection);
 
@@ -32,7 +32,7 @@ void main() {
   });
 
   test("many returns rest of string after consming all matches", () {
-    final input = "BSB, NY, AMS, ";
+    final input = "Brasília, New York, Amsterdam, ";
     final parser = Many(city, separator: StringLiteral(", "));
     final (result, rest) = parser.run(input.codeUnits.collection);
 

@@ -14,10 +14,10 @@ void main() {
     final eAcute0 = "é"; // String.fromCharCodes([0x00E9]);
     final eAcute1 = "é"; // String.fromCharCodes([0x0065, 0x0301]);
 
-    final (result, rest) = StringLiteral(eAcute0.normalized).run(
-      eAcute1.normalized.codeUnits.collection,
+    final (result, rest) = StringLiteralNormalized(eAcute0).run(
+      eAcute1.codeUnits.collection,
     );
-    expect(result, eAcute0.normalized);
+    expect(result, eAcute1);
     expect(rest.source, []);
   });
 }

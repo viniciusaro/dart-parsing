@@ -20,6 +20,18 @@ class StringLiteral with Parser<IterableCollection<int>, String> {
   }
 }
 
-extension StringUnicodeNormalization on String {
-  String get normalized => unorm.nfc(this);
+class StringLiteralNormalized with Parser<IterableCollection<int>, String> {
+  final String literal;
+
+  StringLiteralNormalized(this.literal);
+
+  @override
+  Parser<IterableCollection<int>, String> body() {
+    return OneOfLazy([
+      () => StringLiteral(unorm.nfc(literal)),
+      () => StringLiteral(unorm.nfd(literal)),
+      () => StringLiteral(unorm.nfkc(literal)),
+      () => StringLiteral(unorm.nfkd(literal)),
+    ]);
+  }
 }
