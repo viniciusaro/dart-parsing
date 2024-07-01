@@ -37,29 +37,29 @@ class StringPrefix with Parser<String, String> {
 
   @override
   (String, String) run(String input) {
-    final parser = Prefix<StringCollection, String>(predicate);
-    final (result, rest) = parser.run(StringCollection(input));
+    final parser = Prefix<_StringCollection, String>(predicate);
+    final (result, rest) = parser.run(_StringCollection(input));
     return (result.source, rest.source);
   }
 }
 
-class StringCollection
-    implements RangeReplaceableCollection<StringCollection, String> {
+class _StringCollection
+    implements RangeReplaceableCollection<_StringCollection, String> {
   final String source;
 
-  StringCollection(this.source);
+  _StringCollection(this.source);
 
   @override
   int get length => source.length;
 
   @override
-  StringCollection removeFirst(int count) {
+  _StringCollection removeFirst(int count) {
     // .substring is an expensive method, unfortunetly.
-    return StringCollection(source.substring(count));
+    return _StringCollection(source.substring(count));
   }
 
   @override
-  StringCollection prefix(bool Function(String) predicate) {
+  _StringCollection prefix(bool Function(String) predicate) {
     var prefix = "";
     final length = source.length;
 
@@ -68,10 +68,10 @@ class StringCollection
       if (predicate(char)) {
         prefix += char;
       } else {
-        return StringCollection(prefix);
+        return _StringCollection(prefix);
       }
     }
-    return StringCollection(prefix);
+    return _StringCollection(prefix);
   }
 
   @override

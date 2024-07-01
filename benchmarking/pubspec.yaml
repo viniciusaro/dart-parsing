@@ -9,6 +9,7 @@ environment:
 # Add regular dependencies here.
 dependencies:
   benchmark_harness: ^2.2.2
+  equatable: ^2.0.5
   parsing: 
     path: ../
 

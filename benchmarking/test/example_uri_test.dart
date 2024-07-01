@@ -1,6 +1,5 @@
+import 'package:benchmarking/example/example.dart';
 import 'package:test/test.dart';
-
-import '../example/example.dart';
 
 void main() {
   test("episode parser", () {

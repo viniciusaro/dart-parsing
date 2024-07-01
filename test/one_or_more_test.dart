@@ -1,11 +1,21 @@
 import 'package:parsing/parsing.dart';
 import 'package:test/test.dart';
 
-import '../example/example.dart';
+enum City {
+  bsb,
+  ny,
+  ams,
+}
+
+final city = OneOf([
+  StringLiteral("BSB").map((_) => City.bsb),
+  StringLiteral("NY").map((_) => City.ny),
+  StringLiteral("AMS").map((_) => City.ams),
+]);
 
 void main() {
   test("returns all values that match, when there are many", () {
-    final input = "Brasília, Brasília, Brasília";
+    final input = "BSB, BSB, BSB";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
     final (result, rest) = parser.run(input.codeUnits.collection);
 
@@ -14,7 +24,7 @@ void main() {
   });
 
   test("many returns single value when there is only one", () {
-    final input = "Brasília";
+    final input = "BSB";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
     final (result, rest) = parser.run(input.codeUnits.collection);
 
@@ -32,7 +42,7 @@ void main() {
   });
 
   test("returns rest of string after consming all matches", () {
-    final input = "Brasília, New York, Amsterdam, ";
+    final input = "BSB, NY, AMS, ";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
     final (result, rest) = parser.run(input.codeUnits.collection);
 

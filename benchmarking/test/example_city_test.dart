@@ -1,7 +1,6 @@
+import 'package:benchmarking/example/example.dart';
 import 'package:parsing/parsing.dart';
 import 'package:test/test.dart';
-
-import '../example/example.dart';
 
 void main() {
   test("parsers individual cities", () {
