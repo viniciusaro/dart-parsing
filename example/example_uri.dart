@@ -31,7 +31,7 @@ class End with Parser<RequestInput, Unit> {
 }
 
 class Path<O> with Parser<RequestInput, O> {
-  final Parser<StringCodeUnitsCollection, O> parser;
+  final Parser<IterableCollection<int>, O> parser;
   Path(this.parser);
 
   @override
@@ -60,7 +60,7 @@ class Path<O> with Parser<RequestInput, O> {
 
 class Query<O> with Parser<RequestInput, O> {
   final String name;
-  final Parser<StringCodeUnitsCollection, O> parser;
+  final Parser<IterableCollection<int>, O> parser;
   Query(this.name, this.parser);
 
   @override

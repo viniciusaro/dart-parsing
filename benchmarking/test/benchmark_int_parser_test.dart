@@ -10,6 +10,18 @@ void main() {
     expect(IntParserStringPrefix().run("42"), (42, ""));
   });
 
+  test("string collection parser", () {
+    final (result0, rest0) = IntParserString().run("42".collection);
+    expect(result0, 42);
+    expect(rest0, "".collection);
+
+    final (result1, rest1) = IntParserString().run("42A".collection);
+    expect(result1, 42);
+    expect(String.fromCharCodes(rest1.source), "A");
+    expect(rest1, "A".collection);
+    expect(rest1.length, 1);
+  });
+
   test("runes prefix parser", () {
     final (result, rest) = IntParserRunesPrefix().run(
       IterableCollection("42".runes),
@@ -30,11 +42,6 @@ void main() {
     expect(IntParserRegex().run("42"), (42, ""));
     expect(IntParserRegex().run("42A"), (42, "A"));
   });
-
-  // test("starts with parser", () {
-  //   expect(IntParserStringStartsWith().run("42"), (42, ""));
-  //   expect(IntParserStringStartsWith().run("42A"), (42, "A"));
-  // });
 
   test("code units parser", () {
     final (result, rest) = IntParserCodeUnits().run("42".codeUnits.collection);
