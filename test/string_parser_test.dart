@@ -20,4 +20,11 @@ void main() {
     expect(result, eAcute1);
     expect(rest.source, []);
   });
+
+  test("string through", () {
+    final input = "Lorem ipsum\nEnd";
+    final (result, rest) = StringThrough("\n").run(input.codeUnits.collection);
+    expect(result.source, "Lorem ipsum\n".codeUnits);
+    expect(rest.source, "End".codeUnits);
+  });
 }
