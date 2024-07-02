@@ -1,3 +1,4 @@
+export 'benchmarks/benchmark_coordinate.dart';
 export 'benchmarks/benchmark_closure_call.dart';
 export 'benchmarks/benchmark_double_parser.dart';
 export 'benchmarks/benchmark_int_parser.dart';

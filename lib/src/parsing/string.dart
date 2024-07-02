@@ -20,6 +20,26 @@ class StringLiteral with Parser<IterableCollection<int>, String> {
   }
 }
 
+class StringLiteralString with Parser<StringCollection, String> {
+  final String literal;
+  final Iterable<int> literalCodeUnits;
+
+  StringLiteralString(this.literal) : literalCodeUnits = literal.codeUnits;
+
+  @override
+  (String, StringCollection) run(StringCollection input) {
+    if (input.source.startsWith(literalCodeUnits)) {
+      final result = literal;
+      final rest = input.removeFirst(literalCodeUnits.length);
+      return (result, rest);
+    }
+    throw ParserError(
+      expected: literal,
+      remainingInput: input.source,
+    );
+  }
+}
+
 class StringLiteralNormalized with Parser<IterableCollection<int>, String> {
   final String literal;
 
@@ -32,6 +52,22 @@ class StringLiteralNormalized with Parser<IterableCollection<int>, String> {
       () => StringLiteral(unorm.nfd(literal)),
       () => StringLiteral(unorm.nfkc(literal)),
       () => StringLiteral(unorm.nfkd(literal)),
+    ]);
+  }
+}
+
+class StringLiteralNormalizedString with Parser<StringCollection, String> {
+  final String literal;
+
+  StringLiteralNormalizedString(this.literal);
+
+  @override
+  Parser<StringCollection, String> body() {
+    return OneOfLazy([
+      () => StringLiteralString(unorm.nfc(literal)),
+      () => StringLiteralString(unorm.nfd(literal)),
+      () => StringLiteralString(unorm.nfkc(literal)),
+      () => StringLiteralString(unorm.nfkd(literal)),
     ]);
   }
 }

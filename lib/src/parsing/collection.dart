@@ -42,7 +42,8 @@ class IterableCollection<E>
 class StringCollection
     implements RangeReplaceableCollection<StringCollection, int> {
   final Iterable<int> _source;
-  Iterable<int> get source => _source.skip(_startIndex).take(_endIndex + 1);
+  Iterable<int> get source =>
+      _source.skip(_startIndex).take(_endIndex - _startIndex + 1);
 
   final int _startIndex;
   final int _endIndex;

@@ -33,13 +33,15 @@ class ParserBenchmark<Input, A> extends BenchmarkBase {
   @override
   void run() {
     final (result, _) = parser.run(subject.input);
-    assert(result == subject.result);
+    if (subject.result != null) {
+      assert(result == subject.result);
+    }
   }
 }
 
 class ParserBenchmarkData<Input, A> {
   final Input input;
-  final A result;
+  final A? result;
 
   ParserBenchmarkData({required this.input, required this.result});
 }
@@ -48,7 +50,7 @@ extension ParserBenchmarking<Input, A> on Parser<Input, A> {
   ParserBenchmark<Input, A> bench({
     String? name,
     required Input input,
-    required A result,
+    A? result,
   }) {
     return ParserBenchmark(
       name,

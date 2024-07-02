@@ -10,7 +10,7 @@ void main() {
     expect(IntParserStringPrefix().run("42"), (42, ""));
   });
 
-  test("string collection parser", () {
+  test("int string collection parser", () {
     final (result0, rest0) = IntParserString().run("42".collection);
     expect(result0, 42);
     expect(rest0, "".collection);
@@ -20,6 +20,18 @@ void main() {
     expect(String.fromCharCodes(rest1.source), "A");
     expect(rest1, "A".collection);
     expect(rest1.length, 1);
+
+    final (result2, rest2) = IntParserString().run("15.0".collection);
+    expect(result2, 15);
+    expect(String.fromCharCodes(rest2.source), ".0");
+    expect(rest2, ".0".collection);
+    expect(rest2.length, 2);
+  });
+
+  test("double string collection parser", () {
+    final (result0, rest0) = DoubleParserString().run("42.0".collection);
+    expect(result0, 42.0);
+    expect(rest0, "".collection);
   });
 
   test("runes prefix parser", () {

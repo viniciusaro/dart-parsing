@@ -30,3 +30,12 @@ final coord = lat
     .skip(StringLiteral(" "))
     .take(lng)
     .map(Coordinate.tuple);
+
+final race = city
+    .skip(StringLiteral(",\n"))
+    .take(Many(coord, separator: StringLiteral(",\n"))) //
+    .map(Race.tuple);
+
+final races = //
+    OneOrMore(race, separator: StringLiteral(",\n")) //
+        .map(Races.new);
