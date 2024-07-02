@@ -5,13 +5,13 @@ void main() {
   test("single integer", () {
     final (result, rest) = IntParser().run("42".codeUnits.collection);
     expect(result, 42);
-    expect(rest.source, []);
+    expect(rest.iterable, []);
   });
 
   test("integer and some value", () {
     final (result, rest) = IntParser().run("42A".codeUnits.collection);
     expect(result, 42);
-    expect(rest.source, "A".codeUnits);
+    expect(rest.iterable, "A".codeUnits);
   });
 
   test("some value and an integer", () {

@@ -7,7 +7,7 @@ void main() {
       "Brasília/DF".codeUnits.collection,
     );
     expect(result, "Brasília");
-    expect(rest.source, "/DF".codeUnits);
+    expect(rest.iterable, "/DF".codeUnits);
   });
 
   test("string literal acute", () {
@@ -18,13 +18,13 @@ void main() {
       eAcute1.codeUnits.collection,
     );
     expect(result, eAcute1);
-    expect(rest.source, []);
+    expect(rest.iterable, []);
   });
 
   test("string through", () {
     final input = "Lorem ipsum\nEnd";
     final (result, rest) = StringThrough("\n").run(input.codeUnits.collection);
-    expect(result.source, "Lorem ipsum\n".codeUnits);
-    expect(rest.source, "End".codeUnits);
+    expect(result.iterable, "Lorem ipsum\n".codeUnits);
+    expect(rest.iterable, "End".codeUnits);
   });
 }

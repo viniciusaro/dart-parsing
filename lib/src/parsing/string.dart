@@ -8,14 +8,14 @@ class StringLiteral with Parser<IterableCollection<int>, String> {
 
   @override
   (String, IterableCollection<int>) run(IterableCollection<int> input) {
-    if (input.source.startsWith(literalCodeUnits)) {
+    if (input.iterable.startsWith(literalCodeUnits)) {
       final result = literal;
       final rest = input.removeFirst(literalCodeUnits.length);
       return (result, rest);
     }
     throw ParserError(
       expected: literal,
-      remainingInput: input.source,
+      remainingInput: input.iterable,
     );
   }
 }
@@ -28,14 +28,14 @@ class StringLiteralString with Parser<StringCollection, String> {
 
   @override
   (String, StringCollection) run(StringCollection input) {
-    if (input.source.startsWith(literalCodeUnits)) {
+    if (input.iterable.startsWith(literalCodeUnits)) {
       final result = literal;
       final rest = input.removeFirst(literalCodeUnits.length);
       return (result, rest);
     }
     throw ParserError(
       expected: literal,
-      remainingInput: input.source,
+      remainingInput: input.iterable,
     );
   }
 }
@@ -88,7 +88,7 @@ class StringThrough
       bool found = true;
       final index = i;
       for (var t = 0; t < targetCodeUnits.length; t++, i++) {
-        final inputChar = input.source.elementAt(i);
+        final inputChar = input.iterable.elementAt(i);
         final targetChar = targetCodeUnits.elementAt(t);
         if (inputChar != targetChar) {
           found = false;
@@ -96,7 +96,7 @@ class StringThrough
         }
       }
       if (found) {
-        final result = input.source.take(i).collection;
+        final result = input.iterable.take(i).collection;
         final rest = input.removeFirst(i);
         return (result, rest);
       }
@@ -104,7 +104,7 @@ class StringThrough
     }
     throw ParserError(
       expected: target,
-      remainingInput: input.source,
+      remainingInput: input.iterable,
     );
   }
 }

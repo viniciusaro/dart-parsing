@@ -82,4 +82,8 @@ class _StringCollection
 
   @override
   String toString() => source.toString();
+  
+  @override
+  // TODO: implement iterable
+  Iterable<String> get iterable => throw UnimplementedError();
 }

@@ -36,12 +36,12 @@ void main() {
   test("races parser", () {
     final (result, rest) = races.run(racesInput.codeUnits.collection);
     expect(result.races.first, bsbRace);
-    expect(rest.source, "".codeUnits);
+    expect(rest.iterable, "".codeUnits);
   });
 
   test("races string parser", () {
     final (result, rest) = racesString.run(racesInput.collection);
     expect(result.races.first, bsbRace);
-    expect(rest.source, "".codeUnits);
+    expect(rest.iterable, "".codeUnits);
   });
 }

@@ -17,7 +17,7 @@ class IntParserRunesPrefix with Parser<IterableCollection<int>, int> {
       (rune) => rune >= 48 && rune <= 57,
     );
     final (result, rest) = parser.run(input);
-    return (int.parse(String.fromCharCodes(result.source)), rest);
+    return (int.parse(String.fromCharCodes(result.iterable)), rest);
   }
 }
 
@@ -28,7 +28,7 @@ class IntParserBytesPrefix with Parser<IterableCollection<int>, int> {
       (rune) => rune >= 48 && rune <= 57,
     );
     final (result, rest) = parser.run(input);
-    return (int.parse(String.fromCharCodes(result.source)), rest);
+    return (int.parse(String.fromCharCodes(result.iterable)), rest);
   }
 }
 
@@ -47,7 +47,7 @@ class IntParserCodeUnits with Parser<IterableCollection<int>, int> {
   @override
   (int, IterableCollection<int>) run(IterableCollection<int> input) {
     final codeUnits = input;
-    final intUnits = codeUnits.source.takeWhile(
+    final intUnits = codeUnits.iterable.takeWhile(
       (unit) => unit >= 48 && unit <= 57,
     );
 
@@ -55,7 +55,7 @@ class IntParserCodeUnits with Parser<IterableCollection<int>, int> {
       throw ParserError(expected: "an integer", remainingInput: input);
     }
 
-    final remainingUnits = codeUnits.source.skip(intUnits.length);
+    final remainingUnits = codeUnits.iterable.skip(intUnits.length);
     final result = int.parse(String.fromCharCodes(intUnits));
     return (result, remainingUnits.collection);
   }

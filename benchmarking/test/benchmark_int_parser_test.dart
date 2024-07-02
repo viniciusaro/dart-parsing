@@ -17,13 +17,13 @@ void main() {
 
     final (result1, rest1) = IntParserString().run("42A".collection);
     expect(result1, 42);
-    expect(String.fromCharCodes(rest1.source), "A");
+    expect(String.fromCharCodes(rest1.iterable), "A");
     expect(rest1, "A".collection);
     expect(rest1.length, 1);
 
     final (result2, rest2) = IntParserString().run("15.0".collection);
     expect(result2, 15);
-    expect(String.fromCharCodes(rest2.source), ".0");
+    expect(String.fromCharCodes(rest2.iterable), ".0");
     expect(rest2, ".0".collection);
     expect(rest2.length, 2);
   });
@@ -39,7 +39,7 @@ void main() {
       IterableCollection("42".runes),
     );
     expect(result, 42);
-    expect(rest.source, []);
+    expect(rest.iterable, []);
   });
 
   test("bytes prefix parser", () {
@@ -47,7 +47,7 @@ void main() {
       IterableCollection(utf8.encode("42")),
     );
     expect(result, 42);
-    expect(rest.source, []);
+    expect(rest.iterable, []);
   });
 
   test("regex parser", () {
