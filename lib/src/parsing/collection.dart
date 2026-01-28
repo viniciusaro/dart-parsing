@@ -51,46 +51,49 @@ class IterableCollection<E>
   }
 }
 
-class StringCollection with RangeReplaceableCollection<StringCollection, int> {
-  final Iterable<int> _source;
+class StringSlice with RangeReplaceableCollection<StringSlice, int> {
+  final String _source;
   final int _startIndex;
   final int _endIndex;
 
-  StringCollection(String source)
-      : _source = source.codeUnits,
+  StringSlice(String source)
+      : _source = source,
         _startIndex = 0,
         _endIndex = source.length - 1;
 
-  StringCollection._(Iterable<int> source, int startIndex, int endIndex)
+  StringSlice._(String source, int startIndex, int endIndex)
       : _source = source,
         _startIndex = startIndex,
         _endIndex = endIndex;
 
   @override
-  Iterable<int> get iterable =>
-      _source.skip(_startIndex).take(_endIndex - _startIndex + 1);
+  Iterable<int> get iterable sync* {
+    for (var i = 0; i < length; i++) {
+      yield _source.codeUnitAt(_startIndex + i);
+    }
+  }
 
   @override
-  int get length => _endIndex - _startIndex + 1;
+  int get length => _endIndex - _startIndex;
 
   @override
-  StringCollection prefix(bool Function(int p1) predicate) {
+  StringSlice prefix(bool Function(int p1) predicate) {
     for (var i = _startIndex; i <= _endIndex; i++) {
-      if (!predicate(_source.elementAt(i))) {
-        return i == 0 ? this : StringCollection._(_source, _startIndex, i - 1);
+      if (!predicate(_source.codeUnitAt(i))) {
+        return i == 0 ? this : StringSlice._(_source, _startIndex, i - 1);
       }
     }
     return this;
   }
 
   @override
-  StringCollection removeFirst(int count) {
-    return StringCollection._(_source, _startIndex + count, _endIndex);
+  StringSlice removeFirst(int count) {
+    return StringSlice._(_source, _startIndex + count, _endIndex);
   }
 }
 
 extension StringExtensions on String {
-  StringCollection get collection => StringCollection(this);
+  StringSlice get slice => StringSlice(this);
 }
 
 extension IterableExtensions<E> on Iterable<E> {

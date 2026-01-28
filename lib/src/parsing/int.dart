@@ -11,10 +11,10 @@ class IntParser with Parser<IterableCollection<int>, int> {
   }
 }
 
-class IntParserString with Parser<StringCollection, int> {
+class IntParserString with Parser<StringSlice, int> {
   @override
-  (int, StringCollection) run(StringCollection input) {
-    final parser = Prefix<StringCollection, int>((unit) {
+  (int, StringSlice) run(StringSlice input) {
+    final parser = Prefix<StringSlice, int>((unit) {
       return unit >= 48 && unit <= 57;
     });
     final (result, rest) = parser.run(input);

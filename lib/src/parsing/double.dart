@@ -21,9 +21,9 @@ class DoubleParser with Parser<IterableCollection<int>, double> {
   }
 }
 
-class DoubleParserString with Parser<StringCollection, double> {
+class DoubleParserString with Parser<StringSlice, double> {
   @override
-  Parser<StringCollection, double> body() {
+  Parser<StringSlice, double> body() {
     final dotOrComma = OneOf([
       StringLiteralString(","),
       StringLiteralString("."),
