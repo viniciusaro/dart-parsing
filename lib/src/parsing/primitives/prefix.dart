@@ -1,4 +1,4 @@
-part of 'parsing.dart';
+part of '../parsing.dart';
 
 class Prefix<C extends RangeReplaceableCollection<C, E>, E> with Parser<C, C> {
   final bool Function(E) predicate;

@@ -1,4 +1,4 @@
-part of 'parsing.dart';
+part of '../parsing.dart';
 
 mixin RangeReplaceableCollection<Self, Element>
     implements Collection<Self, Element> {

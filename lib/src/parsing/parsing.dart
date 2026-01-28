@@ -3,21 +3,22 @@ import 'package:unorm_dart/unorm_dart.dart' as unorm;
 import 'package:parsing/fp.dart';
 
 part 'always.dart';
-part 'bool.dart';
-part 'collection.dart';
-part 'double.dart';
 part 'flat_map.dart';
-part 'int.dart';
 part 'many.dart';
 part 'map.dart';
 part 'one_of.dart';
 part 'one_or_more.dart';
 part 'optional.dart';
 part 'parsing_error.dart';
-part 'prefix.dart';
 part 'skip.dart';
-part 'string.dart';
 part 'take.dart';
+
+part 'primitives/bool.dart';
+part 'primitives/collection.dart';
+part 'primitives/double.dart';
+part 'primitives/int.dart';
+part 'primitives/prefix.dart';
+part 'primitives/string.dart';
 
 mixin Parser<Input, A> {
   (A, Input) run(Input input) {

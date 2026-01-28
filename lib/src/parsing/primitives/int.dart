@@ -1,4 +1,4 @@
-part of 'parsing.dart';
+part of '../parsing.dart';
 
 class IntParser with Parser<IterableCollection<int>, int> {
   @override

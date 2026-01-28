@@ -1,4 +1,4 @@
-part of 'parsing.dart';
+part of '../parsing.dart';
 
 class StringLiteral with Parser<IterableCollection<int>, String> {
   final String literal;
