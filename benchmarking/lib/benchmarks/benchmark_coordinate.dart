@@ -23,16 +23,20 @@ New York,
 final racesInput = List.generate(10000, (_) => _coord).join(",\n");
 
 final coordCollectionsSuite = BenchmarkSuite(
-  "Coord parser - int vs string collections",
+  "Coord parser - int vs string collections vs string slice",
   () {
     return [
+      racesStringSlice.bench(
+        name: "StringSlice",
+        input: racesInput.slice,
+      ),
       races.bench(
         name: "IntCollection",
         input: racesInput.codeUnits.collection,
       ),
       racesString.bench(
-        name: "StringCollection",
-        input: racesInput.collection,
+        name: "StringLiteral",
+        input: racesInput.slice,
       ),
     ];
   },

@@ -40,6 +40,25 @@ class StringLiteralString with Parser<StringSlice, String> {
   }
 }
 
+class StringLiteralSlice with Parser<StringSlice, StringSlice> {
+  final StringSlice literalSlice;
+
+  StringLiteralSlice(String literal) : this.literalSlice = literal.slice;
+
+  @override
+  (StringSlice, StringSlice) run(StringSlice input) {
+    if (input.startsWith(literalSlice)) {
+      final result = literalSlice;
+      final rest = input.removeFirst(literalSlice.length);
+      return (result, rest);
+    }
+    throw ParserError(
+      expected: literalSlice.toString(),
+      remainingInput: input.iterable,
+    );
+  }
+}
+
 class StringLiteralNormalized with Parser<IterableCollection<int>, String> {
   final String literal;
 

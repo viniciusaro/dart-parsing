@@ -11,27 +11,27 @@ void main() {
   });
 
   test("int string collection parser", () {
-    final (result0, rest0) = IntParserString().run("42".collection);
+    final (result0, rest0) = IntParserString().run("42".slice);
     expect(result0, 42);
-    expect(rest0, "".collection);
+    expect(rest0, "".slice);
 
-    final (result1, rest1) = IntParserString().run("42A".collection);
+    final (result1, rest1) = IntParserString().run("42A".slice);
     expect(result1, 42);
     expect(String.fromCharCodes(rest1.iterable), "A");
-    expect(rest1, "A".collection);
+    expect(rest1, "A".slice);
     expect(rest1.length, 1);
 
-    final (result2, rest2) = IntParserString().run("15.0".collection);
+    final (result2, rest2) = IntParserString().run("15.0".slice);
     expect(result2, 15);
     expect(String.fromCharCodes(rest2.iterable), ".0");
-    expect(rest2, ".0".collection);
+    expect(rest2, ".0".slice);
     expect(rest2.length, 2);
   });
 
   test("double string collection parser", () {
-    final (result0, rest0) = DoubleParserString().run("42.0".collection);
+    final (result0, rest0) = DoubleParserString().run("42.0".slice);
     expect(result0, 42.0);
-    expect(rest0, "".collection);
+    expect(rest0, "".slice);
   });
 
   test("runes prefix parser", () {

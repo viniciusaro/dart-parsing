@@ -40,7 +40,7 @@ void main() {
   });
 
   test("races string parser", () {
-    final (result, rest) = racesString.run(racesInput.collection);
+    final (result, rest) = racesString.run(racesInput.slice);
     expect(result.races.first, bsbRace);
     expect(rest.iterable, "".codeUnits);
   });

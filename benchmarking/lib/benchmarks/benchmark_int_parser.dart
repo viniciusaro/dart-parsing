@@ -13,7 +13,7 @@ final intMaxIntSuite = BenchmarkSuite("Int parsers, max int", () {
       result: intResult,
     ),
     IntParserString().bench(
-      input: string.collection,
+      input: string.slice,
       result: intResult,
     ),
     IntParserRegex().bench(
@@ -50,7 +50,7 @@ final intLongSuffixSuite = BenchmarkSuite("Int parsers, long suffix", () {
       result: intResult,
     ),
     IntParserString().bench(
-      input: string.collection,
+      input: string.slice,
       result: intResult,
     ),
     IntParserRegex().bench(

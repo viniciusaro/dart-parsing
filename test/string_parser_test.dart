@@ -10,6 +10,14 @@ void main() {
     expect(rest.iterable, "/DF".codeUnits);
   });
 
+  test("string slice", () {
+    final (result, rest) = StringLiteralSlice("Brasília").run(
+      "Brasília/DF".slice,
+    );
+    expect(result.toString(), "Brasília");
+    expect(rest.iterable, "/DF".slice.iterable);
+  });
+
   test("string literal acute", () {
     final eAcute0 = "é"; // String.fromCharCodes([0x00E9]);
     final eAcute1 = "é"; // String.fromCharCodes([0x0065, 0x0301]);

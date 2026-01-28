@@ -59,7 +59,7 @@ class StringSlice with RangeReplaceableCollection<StringSlice, int> {
   StringSlice(String source)
       : _source = source,
         _startIndex = 0,
-        _endIndex = source.length - 1;
+        _endIndex = source.length;
 
   StringSlice._(String source, int startIndex, int endIndex)
       : _source = source,
@@ -78,7 +78,7 @@ class StringSlice with RangeReplaceableCollection<StringSlice, int> {
 
   @override
   StringSlice prefix(bool Function(int p1) predicate) {
-    for (var i = _startIndex; i <= _endIndex; i++) {
+    for (var i = _startIndex; i < _endIndex; i++) {
       if (!predicate(_source.codeUnitAt(i))) {
         return i == 0 ? this : StringSlice._(_source, _startIndex, i - 1);
       }
@@ -89,6 +89,38 @@ class StringSlice with RangeReplaceableCollection<StringSlice, int> {
   @override
   StringSlice removeFirst(int count) {
     return StringSlice._(_source, _startIndex + count, _endIndex);
+  }
+
+  bool startsWith(StringSlice other) {
+    if (other == this) {
+      return true;
+    }
+
+    if (other.length > length) {
+      return false;
+    }
+
+    var i = _startIndex;
+    for (int element in other.iterable) {
+      if (_source.codeUnitAt(i) != element) {
+        return false;
+      }
+      i++;
+    }
+    return true;
+  }
+
+  @override
+  String toString() {
+    return _source.substring(_startIndex, _endIndex);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is StringSlice &&
+        other._source == _source &&
+        other._startIndex == _startIndex &&
+        other._endIndex == _endIndex;
   }
 }
 
