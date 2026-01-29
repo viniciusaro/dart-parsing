@@ -41,6 +41,10 @@ final class StringSlice {
     return true;
   }
 
+  StringSlice prefix(int count) {
+    return StringSlice._(_source, _startIndex, _endIndex - (length - count));
+  }
+
   StringSlice removeFirst(int count) {
     return StringSlice._(_source, _startIndex + count, _endIndex);
   }

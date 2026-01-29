@@ -1,4 +1,5 @@
 import 'package:parsing/fp.dart';
+import 'package:unorm_dart/unorm_dart.dart' as unorm;
 
 part 'always.dart';
 part 'flat_map.dart';
@@ -8,13 +9,13 @@ part 'one_of.dart';
 part 'one_or_more.dart';
 part 'optional.dart';
 part 'parsing_error.dart';
+part 'prefix.dart';
 part 'skip.dart';
 part 'take.dart';
 
 part 'primitives/bool.dart';
 part 'primitives/double.dart';
 part 'primitives/int.dart';
-part 'prefix.dart';
 part 'primitives/slices.dart';
 part 'primitives/string.dart';
 
