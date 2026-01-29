@@ -1,8 +1,8 @@
 part of '../parsing.dart';
 
-class DoubleParser with Parser<double, IterableCollection<int>> {
+final class DoubleParser with Parser<double, StringSlice> {
   @override
-  Parser<double, IterableCollection<int>> body() {
+  Parser<double, StringSlice> body() {
     final dotOrComma = OneOf([
       StringLiteral(","),
       StringLiteral("."),
@@ -17,27 +17,6 @@ class DoubleParser with Parser<double, IterableCollection<int>> {
     return IntParser()
         .skip(OptionalParser(dotOrComma))
         .take(OptionalParser(IntParser()))
-        .map(parseDoubleFromTuple);
-  }
-}
-
-class DoubleParserString with Parser<double, StringSlice> {
-  @override
-  Parser<double, StringSlice> body() {
-    final dotOrComma = OneOf([
-      StringLiteralString(","),
-      StringLiteralString("."),
-    ]);
-
-    final parseDoubleFromTuple = ((int, int?) tuple) {
-      return tuple.$2 != null
-          ? double.parse("${tuple.$1}.${tuple.$2}")
-          : tuple.$1.toDouble();
-    };
-
-    return IntParserString()
-        .skip(OptionalParser(dotOrComma))
-        .take(OptionalParser(IntParserString()))
         .map(parseDoubleFromTuple);
   }
 }

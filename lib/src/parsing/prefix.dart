@@ -1,4 +1,4 @@
-import 'parser.dart';
+part of 'parsing.dart';
 
 class Prefix<E> with Parser<Iterable<E>, Iterable<E>> {
   final bool Function(E) predicate;

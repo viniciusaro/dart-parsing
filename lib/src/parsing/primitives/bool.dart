@@ -1,11 +1,11 @@
 part of '../parsing.dart';
 
-class BoolParser with Parser<bool, IterableCollection<int>> {
+class BoolParser with Parser<bool, StringSlice> {
   @override
-  Parser<bool, IterableCollection<int>> body() {
+  Parser<bool, StringSlice> body() {
     return OneOf([
-      StringLiteral("true").map(bool.parse),
-      StringLiteral("false").map(bool.parse),
+      StringLiteral("true").map((_) => true),
+      StringLiteral("false").map((_) => false),
     ]);
   }
 }

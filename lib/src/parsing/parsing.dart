@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-import 'package:unorm_dart/unorm_dart.dart' as unorm;
 import 'package:parsing/fp.dart';
 
 part 'always.dart';
@@ -14,10 +12,10 @@ part 'skip.dart';
 part 'take.dart';
 
 part 'primitives/bool.dart';
-part 'primitives/collection.dart';
 part 'primitives/double.dart';
 part 'primitives/int.dart';
-part 'primitives/prefix.dart';
+part 'prefix.dart';
+part 'primitives/slices.dart';
 part 'primitives/string.dart';
 
 mixin Parser<A, Input> {

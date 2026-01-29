@@ -1,23 +1,20 @@
 part of '../parsing.dart';
 
-class IntParser with Parser<int, IterableCollection<int>> {
-  @override
-  (int, IterableCollection<int>) run(IterableCollection<int> input) {
-    final parser = Prefix<IterableCollection<int>, int>(
-      (unit) => unit >= 48 && unit <= 57,
-    );
-    final (result, rest) = parser.run(input);
-    return (int.parse(String.fromCharCodes(result.iterable)), rest);
-  }
-}
-
-class IntParserString with Parser<int, StringSlice> {
+class IntParser with Parser<int, StringSlice> {
   @override
   (int, StringSlice) run(StringSlice input) {
-    final parser = Prefix<StringSlice, int>((unit) {
-      return unit >= 48 && unit <= 57;
-    });
-    final (result, rest) = parser.run(input);
-    return (int.parse(String.fromCharCodes(result.iterable)), rest);
+    List<int> matches = [];
+
+    for (final unicode in input.iterable) {
+      if (unicode >= 48 && unicode <= 57) {
+        matches.add(unicode);
+      } else {
+        break;
+      }
+    }
+
+    final stringRest = input.removeFirst(matches.length);
+    final intResult = int.parse(String.fromCharCodes(matches));
+    return (intResult, stringRest);
   }
 }
