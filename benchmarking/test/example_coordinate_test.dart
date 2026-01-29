@@ -46,6 +46,6 @@ void main() {
     expect(result.races.length, 2);
     expect(result.races.elementAt(0), bsbRace);
     expect(result.races.elementAt(1), nyRace);
-    expect(rest.iterable, "".codeUnits);
+    expect(rest.toString(), "");
   });
 }

@@ -15,10 +15,10 @@ void main() {
 
     final (result0, rest0) = city.run("Bras${iAcute0}lia".slice);
     expect(result0, City.bsb);
-    expect(rest0.iterable, []);
+    expect(rest0.toString(), "");
 
     final (result1, rest1) = city.run("Bras${iAcute1}lia".slice);
     expect(result1, City.bsb);
-    expect(rest1.iterable, []);
+    expect(rest1.toString(), "");
   });
 }

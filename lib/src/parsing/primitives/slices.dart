@@ -17,11 +17,7 @@ final class StringSlice {
     this._endIndex,
   );
 
-  Iterable<int> get iterable sync* {
-    for (int i = _startIndex; i <= _endIndex; i++) {
-      yield _source.codeUnitAt(i);
-    }
-  }
+  int codeUnitAt(int i) => _source.codeUnitAt(_startIndex + i);
 
   bool startsWith(StringSlice other) {
     if (other.length > this.length) {

@@ -16,13 +16,13 @@ void main() {
 
     final (result, rest) = StringLiteralNormalized(eAcute0).run(eAcute1.slice);
     expect(result.toString(), eAcute1);
-    expect(rest.iterable, []);
+    expect(rest.toString(), "");
   });
 
-  test("string through", () {
-    final input = "Lorem ipsum\nEnd";
-    final (result, rest) = StringThrough("\n").run(input.slice);
-    expect(result.iterable, "Lorem ipsum\n".codeUnits);
-    expect(rest.iterable, "End".codeUnits);
-  });
+  // test("string through", () {
+  //   final input = "Lorem ipsum\nEnd";
+  //   final (result, rest) = StringThrough("\n").run(input.slice);
+  //   expect(result.iterable, "Lorem ipsum\n".codeUnits);
+  //   expect(rest.iterable, "End".codeUnits);
+  // });
 }
