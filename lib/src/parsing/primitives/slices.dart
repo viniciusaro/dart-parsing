@@ -24,10 +24,41 @@ final class StringSlice {
   }
 
   bool startsWith(StringSlice other) {
-    return false;
+    if (other.length > this.length) {
+      return false;
+    }
+    if (other == this) {
+      return true;
+    }
+
+    int i = _startIndex;
+    for (final unit in other.iterable) {
+      if (unit != _source.codeUnitAt(i)) {
+        return false;
+      }
+      i++;
+    }
+    return true;
   }
 
   StringSlice removeFirst(int count) {
     return StringSlice._(_source, _startIndex + count, _endIndex);
   }
+
+  @override
+  String toString() {
+    return _source.substring(_startIndex, _endIndex);
+  }
+
+  @override
+  operator ==(Object other) {
+    return other is StringSlice &&
+        other._source == _source &&
+        other._startIndex == _startIndex &&
+        other._endIndex == _endIndex;
+  }
+}
+
+extension StringExtensions on String {
+  StringSlice get slice => StringSlice(this);
 }

@@ -15,7 +15,7 @@ final class StringLiteral with Parser<StringSlice, StringSlice> {
     }
     throw ParserError(
       expected: literalSlice.toString(),
-      remainingInput: input.iterable,
+      remainingInput: input.toString(),
     );
   }
 }

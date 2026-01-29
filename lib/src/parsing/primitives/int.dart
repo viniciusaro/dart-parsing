@@ -14,7 +14,15 @@ class IntParser with Parser<int, StringSlice> {
     }
 
     final stringRest = input.removeFirst(matches.length);
-    final intResult = int.parse(String.fromCharCodes(matches));
-    return (intResult, stringRest);
+
+    try {
+      final intResult = int.parse(String.fromCharCodes(matches));
+      return (intResult, stringRest);
+    } catch (e) {
+      throw ParserError(
+        expected: input.toString(),
+        remainingInput: stringRest.toString(),
+      );
+    }
   }
 }
