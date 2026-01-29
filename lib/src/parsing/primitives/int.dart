@@ -3,20 +3,22 @@ part of '../parsing.dart';
 class IntParser with Parser<int, StringSlice> {
   @override
   (int, StringSlice) run(StringSlice input) {
-    List<int> matches = [];
-
-    for (final unicode in input.iterable) {
-      if (unicode >= 48 && unicode <= 57) {
-        matches.add(unicode);
+    int matchesCount = 0;
+    for (var i = input._startIndex; i <= input._endIndex; i++) {
+      final unit = input._source.codeUnitAt(i);
+      if (unit >= 48 && unit <= 57) {
+        matchesCount++;
       } else {
         break;
       }
     }
 
-    final stringRest = input.removeFirst(matches.length);
+    final stringRest = input.removeFirst(matchesCount);
 
     try {
-      final intResult = int.parse(String.fromCharCodes(matches));
+      final intResult = int.parse(
+        String.fromCharCodes(input.prefix(matchesCount).iterable),
+      );
       return (intResult, stringRest);
     } catch (e) {
       throw ParserError(

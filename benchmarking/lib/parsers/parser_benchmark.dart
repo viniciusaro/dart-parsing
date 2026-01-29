@@ -73,6 +73,7 @@ class BenchmarkSuite extends BenchmarkBase {
     final benchmarks = this.benchmarks();
 
     for (var bench in benchmarks) {
+      print("Running: ${bench.name}");
       bench.report();
     }
   }

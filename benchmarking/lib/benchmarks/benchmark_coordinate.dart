@@ -20,15 +20,17 @@ New York,
 15.832373° S, 47.987751° W,
 15.832373° S, 47.987751° W""";
 
-final racesInput = List.generate(10000, (_) => _coord).join(",\n");
-
 final coordCollectionsSuite = BenchmarkSuite(
   "Coord parser",
   () {
     return [
       races.bench(
-        name: "Int - StringSlice",
-        input: racesInput.slice,
+        name: "Int - StringSlice on 1000",
+        input: List.generate(1000, (_) => _coord).join(",\n").slice,
+      ),
+      races.bench(
+        name: "Int - StringSlice on 10000",
+        input: List.generate(10000, (_) => _coord).join(",\n").slice,
       ),
     ];
   },
