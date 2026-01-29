@@ -1,7 +1,7 @@
 part of 'parsing.dart';
 
-class OptionalParser<Input, A> with Parser<Input, A?> {
-  final Parser<Input, A> upstream;
+class OptionalParser<A, Input> with Parser<A?, Input> {
+  final Parser<A, Input> upstream;
 
   OptionalParser(this.upstream);
 

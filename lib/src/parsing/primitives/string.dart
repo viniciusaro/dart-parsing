@@ -1,6 +1,6 @@
 part of '../parsing.dart';
 
-class StringLiteral with Parser<IterableCollection<int>, String> {
+class StringLiteral with Parser<String, IterableCollection<int>> {
   final String literal;
   final Iterable<int> literalCodeUnits;
 
@@ -20,7 +20,7 @@ class StringLiteral with Parser<IterableCollection<int>, String> {
   }
 }
 
-class StringLiteralString with Parser<StringSlice, String> {
+class StringLiteralString with Parser<String, StringSlice> {
   final String literal;
   final Iterable<int> literalCodeUnits;
 
@@ -59,13 +59,13 @@ class StringLiteralSlice with Parser<StringSlice, StringSlice> {
   }
 }
 
-class StringLiteralNormalized with Parser<IterableCollection<int>, String> {
+class StringLiteralNormalized with Parser<String, IterableCollection<int>> {
   final String literal;
 
   StringLiteralNormalized(this.literal);
 
   @override
-  Parser<IterableCollection<int>, String> body() {
+  Parser<String, IterableCollection<int>> body() {
     return OneOfLazy([
       () => StringLiteral(unorm.nfc(literal)),
       () => StringLiteral(unorm.nfd(literal)),
@@ -75,13 +75,13 @@ class StringLiteralNormalized with Parser<IterableCollection<int>, String> {
   }
 }
 
-class StringLiteralNormalizedString with Parser<StringSlice, String> {
+class StringLiteralNormalizedString with Parser<String, StringSlice> {
   final String literal;
 
   StringLiteralNormalizedString(this.literal);
 
   @override
-  Parser<StringSlice, String> body() {
+  Parser<String, StringSlice> body() {
     return OneOfLazy([
       () => StringLiteralString(unorm.nfc(literal)),
       () => StringLiteralString(unorm.nfd(literal)),

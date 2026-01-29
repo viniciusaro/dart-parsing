@@ -1,6 +1,6 @@
 part of '../parsing.dart';
 
-class IntParser with Parser<IterableCollection<int>, int> {
+class IntParser with Parser<int, IterableCollection<int>> {
   @override
   (int, IterableCollection<int>) run(IterableCollection<int> input) {
     final parser = Prefix<IterableCollection<int>, int>(
@@ -11,7 +11,7 @@ class IntParser with Parser<IterableCollection<int>, int> {
   }
 }
 
-class IntParserString with Parser<StringSlice, int> {
+class IntParserString with Parser<int, StringSlice> {
   @override
   (int, StringSlice) run(StringSlice input) {
     final parser = Prefix<StringSlice, int>((unit) {

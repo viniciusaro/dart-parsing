@@ -1,8 +1,8 @@
 part of '../parsing.dart';
 
-class DoubleParser with Parser<IterableCollection<int>, double> {
+class DoubleParser with Parser<double, IterableCollection<int>> {
   @override
-  Parser<IterableCollection<int>, double> body() {
+  Parser<double, IterableCollection<int>> body() {
     final dotOrComma = OneOf([
       StringLiteral(","),
       StringLiteral("."),
@@ -21,9 +21,9 @@ class DoubleParser with Parser<IterableCollection<int>, double> {
   }
 }
 
-class DoubleParserString with Parser<StringSlice, double> {
+class DoubleParserString with Parser<double, StringSlice> {
   @override
-  Parser<StringSlice, double> body() {
+  Parser<double, StringSlice> body() {
     final dotOrComma = OneOf([
       StringLiteralString(","),
       StringLiteralString("."),

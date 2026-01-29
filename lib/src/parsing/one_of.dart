@@ -1,18 +1,18 @@
 part of 'parsing.dart';
 
-class OneOf<Input, A> with Parser<Input, A> {
-  final List<Parser<Input, A>> upstreams;
+class OneOf<A, Input> with Parser<A, Input> {
+  final List<Parser<A, Input>> upstreams;
   OneOf(this.upstreams);
 
   @override
-  Parser<Input, A> body() {
+  Parser<A, Input> body() {
     return OneOfLazy(upstreams.map((parser) => () => parser));
   }
 }
 
-class OneOfLazy<Input, A> with Parser<Input, A> {
-  final Iterable<Parser<Input, A> Function()> lazyUpstreams;
-  final Map<int, Parser<Input, A>> _upstreams = {};
+class OneOfLazy<A, Input> with Parser<A, Input> {
+  final Iterable<Parser<A, Input> Function()> lazyUpstreams;
+  final Map<int, Parser<A, Input>> _upstreams = {};
 
   OneOfLazy(this.lazyUpstreams);
 

@@ -13,12 +13,12 @@ class OperationBenchmark extends BenchmarkBase {
   }
 }
 
-class ParserBenchmark<Input, A> extends BenchmarkBase {
-  final Parser<Input, A> Function() parserBuilder;
-  final ParserBenchmarkData<Input, A> Function() subjectBuilder;
+class ParserBenchmark<A, Input> extends BenchmarkBase {
+  final Parser<A, Input> Function() parserBuilder;
+  final ParserBenchmarkData<A, Input> Function() subjectBuilder;
 
-  late Parser<Input, A> parser;
-  late ParserBenchmarkData<Input, A> subject;
+  late Parser<A, Input> parser;
+  late ParserBenchmarkData<A, Input> subject;
 
   ParserBenchmark(String? name, this.parserBuilder, this.subjectBuilder)
       : super(name ?? parserBuilder().runtimeType.toString());
@@ -39,15 +39,15 @@ class ParserBenchmark<Input, A> extends BenchmarkBase {
   }
 }
 
-class ParserBenchmarkData<Input, A> {
+class ParserBenchmarkData<A, Input> {
   final Input input;
   final A? result;
 
   ParserBenchmarkData({required this.input, required this.result});
 }
 
-extension ParserBenchmarking<Input, A> on Parser<Input, A> {
-  ParserBenchmark<Input, A> bench({
+extension ParserBenchmarking<A, Input> on Parser<A, Input> {
+  ParserBenchmark<A, Input> bench({
     String? name,
     required Input input,
     A? result,

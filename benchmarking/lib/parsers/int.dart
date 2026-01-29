@@ -1,16 +1,16 @@
 import 'package:benchmarking/parsers.dart';
 import 'package:parsing/parsing.dart';
 
-class IntParserStringPrefix with Parser<String, int> {
+class IntParserStringPrefix with Parser<int, String> {
   @override
-  Parser<String, int> body() {
+  Parser<int, String> body() {
     return StringPrefix(
       (char) => char.codeUnits.first >= 48 && char.codeUnits.first <= 57,
     ).map(int.parse);
   }
 }
 
-class IntParserRunesPrefix with Parser<IterableCollection<int>, int> {
+class IntParserRunesPrefix with Parser<int, IterableCollection<int>> {
   @override
   (int, IterableCollection<int>) run(IterableCollection<int> input) {
     final parser = Prefix<IterableCollection<int>, int>(
@@ -21,7 +21,7 @@ class IntParserRunesPrefix with Parser<IterableCollection<int>, int> {
   }
 }
 
-class IntParserBytesPrefix with Parser<IterableCollection<int>, int> {
+class IntParserBytesPrefix with Parser<int, IterableCollection<int>> {
   @override
   (int, IterableCollection<int>) run(IterableCollection<int> input) {
     final parser = Prefix<IterableCollection<int>, int>(
@@ -32,7 +32,7 @@ class IntParserBytesPrefix with Parser<IterableCollection<int>, int> {
   }
 }
 
-class IntParserRegex with Parser<String, int> {
+class IntParserRegex with Parser<int, String> {
   @override
   (int, String) run(String input) {
     final regex = RegExp(r'\d+');
@@ -43,7 +43,7 @@ class IntParserRegex with Parser<String, int> {
   }
 }
 
-class IntParserCodeUnits with Parser<IterableCollection<int>, int> {
+class IntParserCodeUnits with Parser<int, IterableCollection<int>> {
   @override
   (int, IterableCollection<int>) run(IterableCollection<int> input) {
     final codeUnits = input;

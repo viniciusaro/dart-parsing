@@ -1,14 +1,14 @@
 part of 'parsing.dart';
 
-class OneOrMore<Input, A> with Parser<Input, List<A>> {
-  final Parser<Input, A> upstream;
-  final Parser<Input, Unit>? separator;
+class OneOrMore<A, Input> with Parser<List<A>, Input> {
+  final Parser<A, Input> upstream;
+  final Parser<Unit, Input>? separator;
 
-  OneOrMore(this.upstream, {Parser<Input, dynamic>? separator})
+  OneOrMore(this.upstream, {Parser<dynamic, Input>? separator})
       : separator = separator?.map(toUnit);
 
   @override
-  Parser<Input, List<A>> body() {
+  Parser<List<A>, Input> body() {
     return upstream
         .skip(OptionalParser(separator ?? Always(unit)))
         .take(Many(upstream, separator: separator))
