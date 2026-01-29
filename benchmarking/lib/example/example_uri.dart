@@ -31,7 +31,7 @@ class End with Parser<Unit, RequestInput> {
 }
 
 class Path<O> with Parser<O, RequestInput> {
-  final Parser<O, IterableCollection<int>> parser;
+  final Parser<O, StringSlice> parser;
   Path(this.parser);
 
   @override
@@ -44,7 +44,7 @@ class Path<O> with Parser<O, RequestInput> {
       );
     }
 
-    final (result, segmentRest) = parser.run(segment.codeUnits.collection);
+    final (result, segmentRest) = parser.run(segment.slice);
     if (segmentRest.length > 0) {
       throw ParserError(
         expected: "segment to be fully consumed",
@@ -60,7 +60,7 @@ class Path<O> with Parser<O, RequestInput> {
 
 class Query<O> with Parser<O, RequestInput> {
   final String name;
-  final Parser<O, IterableCollection<int>> parser;
+  final Parser<O, StringSlice> parser;
   Query(this.name, this.parser);
 
   @override
@@ -72,7 +72,7 @@ class Query<O> with Parser<O, RequestInput> {
         remainingInput: input,
       );
     }
-    final (result, paramRest) = parser.run(param.codeUnits.collection);
+    final (result, paramRest) = parser.run(param.slice);
     if (paramRest.length > 0) {
       throw ParserError(
         expected: "param to be fully consumed",

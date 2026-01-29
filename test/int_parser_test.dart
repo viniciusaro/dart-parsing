@@ -14,6 +14,18 @@ void main() {
     expect(rest.iterable, "A".codeUnits);
   });
 
+  test("integer and dot", () {
+    final (result, rest) = IntParser().run("42.0".slice);
+    expect(result, 42);
+    expect(rest.iterable, ".0".codeUnits);
+  });
+
+  test("integer and comma", () {
+    final (result, rest) = IntParser().run("42,0".slice);
+    expect(result, 42);
+    expect(rest.iterable, ",0".codeUnits);
+  });
+
   test("some value and an integer", () {
     expect(
       () => IntParser().run("A42".slice),

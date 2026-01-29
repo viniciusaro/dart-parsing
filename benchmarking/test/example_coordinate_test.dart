@@ -20,9 +20,17 @@ New York,
 15.832373° S, 47.987751° W,
 15.832373° S, 47.987751° W""";
 
-final racesInput = List.generate(1000, (_) => _coord).join(",\n");
-
 final bsbRace = Race(City.bsb, [
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+]);
+
+final nyRace = Race(City.ny, [
   Coordinate(-15.832373, -47.987751),
   Coordinate(-15.832373, -47.987751),
   Coordinate(-15.832373, -47.987751),
@@ -34,14 +42,10 @@ final bsbRace = Race(City.bsb, [
 
 void main() {
   test("races parser", () {
-    final (result, rest) = races.run(racesInput.codeUnits.collection);
-    expect(result.races.first, bsbRace);
-    expect(rest.iterable, "".codeUnits);
-  });
-
-  test("races string parser", () {
-    final (result, rest) = racesString.run(racesInput.slice);
-    expect(result.races.first, bsbRace);
+    final (result, rest) = races.run(_coord.slice);
+    expect(result.races.length, 2);
+    expect(result.races.elementAt(0), bsbRace);
+    expect(result.races.elementAt(1), nyRace);
     expect(rest.iterable, "".codeUnits);
   });
 }

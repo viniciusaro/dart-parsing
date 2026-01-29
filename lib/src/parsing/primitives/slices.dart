@@ -5,11 +5,11 @@ final class StringSlice {
   final int _startIndex;
   final int _endIndex;
 
-  int get length => _endIndex - _startIndex;
+  int get length => _endIndex - _startIndex + 1;
 
   StringSlice(this._source)
       : this._startIndex = 0,
-        this._endIndex = _source.length;
+        this._endIndex = _source.length - 1;
 
   StringSlice._(
     this._source,
@@ -18,8 +18,8 @@ final class StringSlice {
   );
 
   Iterable<int> get iterable sync* {
-    for (var i = 0; i < length; i++) {
-      yield _source.codeUnitAt(_startIndex + i);
+    for (int i = _startIndex; i <= _endIndex; i++) {
+      yield _source.codeUnitAt(i);
     }
   }
 
@@ -31,12 +31,12 @@ final class StringSlice {
       return true;
     }
 
-    int i = _startIndex;
-    for (final unit in other.iterable) {
-      if (unit != _source.codeUnitAt(i)) {
+    for (int i = _startIndex, j = other._startIndex;
+        j < other.length;
+        i++, j++) {
+      if (other._source.codeUnitAt(j) != _source.codeUnitAt(i)) {
         return false;
       }
-      i++;
     }
     return true;
   }
@@ -51,7 +51,7 @@ final class StringSlice {
 
   @override
   String toString() {
-    return _source.substring(_startIndex, _endIndex);
+    return _source.substring(_startIndex, _endIndex + 1);
   }
 
   @override
