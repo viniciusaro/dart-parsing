@@ -1,8 +1,8 @@
 part of '../parsing.dart';
 
-class IntParser with Parser<int, StringSlice> {
+class IntParser with Parser<int, MutableStringSlice> {
   @override
-  (int, StringSlice) run(StringSlice input) {
+  (int, MutableStringSlice) run(MutableStringSlice input) {
     int matchesCount = 0;
     for (var i = 0; i < input.length; i++) {
       final unit = input.codeUnitAt(i);

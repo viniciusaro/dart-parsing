@@ -31,7 +31,7 @@ class End with Parser<Unit, RequestInput> {
 }
 
 class Path<O> with Parser<O, RequestInput> {
-  final Parser<O, StringSlice> parser;
+  final Parser<O, MutableStringSlice> parser;
   Path(this.parser);
 
   @override
@@ -60,7 +60,7 @@ class Path<O> with Parser<O, RequestInput> {
 
 class Query<O> with Parser<O, RequestInput> {
   final String name;
-  final Parser<O, StringSlice> parser;
+  final Parser<O, MutableStringSlice> parser;
   Query(this.name, this.parser);
 
   @override

@@ -1,17 +1,17 @@
 part of '../parsing.dart';
 
-final class StringSlice {
+final class MutableStringSlice {
   final String _source;
   int _startIndex;
   int _endIndex;
 
   int get length => _endIndex - _startIndex + 1;
 
-  StringSlice(this._source)
+  MutableStringSlice(this._source)
       : this._startIndex = 0,
         this._endIndex = _source.length - 1;
 
-  StringSlice._(
+  MutableStringSlice._(
     this._source,
     this._startIndex,
     this._endIndex,
@@ -19,7 +19,7 @@ final class StringSlice {
 
   int codeUnitAt(int i) => _source.codeUnitAt(_startIndex + i);
 
-  bool startsWith(StringSlice other) {
+  bool startsWith(MutableStringSlice other) {
     if (other.length > this.length) {
       return false;
     }
@@ -45,12 +45,13 @@ final class StringSlice {
     _startIndex = _startIndex + count;
   }
 
-  StringSlice taking(int count) {
-    return StringSlice._(_source, _startIndex, _endIndex - (length - count));
+  MutableStringSlice taking(int count) {
+    return MutableStringSlice._(
+        _source, _startIndex, _endIndex - (length - count));
   }
 
-  StringSlice skiping(int count) {
-    return StringSlice._(_source, _startIndex + count, _endIndex);
+  MutableStringSlice skiping(int count) {
+    return MutableStringSlice._(_source, _startIndex + count, _endIndex);
   }
 
   @override
@@ -60,7 +61,7 @@ final class StringSlice {
 
   @override
   operator ==(Object other) {
-    return other is StringSlice &&
+    return other is MutableStringSlice &&
         other._source == _source &&
         other._startIndex == _startIndex &&
         other._endIndex == _endIndex;
@@ -68,5 +69,5 @@ final class StringSlice {
 }
 
 extension StringExtensions on String {
-  StringSlice get slice => StringSlice(this);
+  MutableStringSlice get slice => MutableStringSlice(this);
 }

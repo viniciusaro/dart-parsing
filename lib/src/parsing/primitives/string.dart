@@ -1,13 +1,13 @@
 part of '../parsing.dart';
 
-final class StringLiteral with Parser<StringSlice, StringSlice> {
+final class StringLiteral with Parser<MutableStringSlice, MutableStringSlice> {
   final String literal;
-  final StringSlice literalSlice;
+  final MutableStringSlice literalSlice;
 
-  StringLiteral(this.literal) : this.literalSlice = StringSlice(literal);
+  StringLiteral(this.literal) : this.literalSlice = MutableStringSlice(literal);
 
   @override
-  (StringSlice, StringSlice) run(StringSlice input) {
+  (MutableStringSlice, MutableStringSlice) run(MutableStringSlice input) {
     if (input.startsWith(literalSlice)) {
       final result = literalSlice;
       input.skip(literalSlice.length);
@@ -20,13 +20,13 @@ final class StringLiteral with Parser<StringSlice, StringSlice> {
   }
 }
 
-// final class StringThrough with Parser<StringSlice, StringSlice> {
-//   final StringSlice literal;
+// final class StringThrough with Parser<MutableStringSlice, MutableStringSlice> {
+//   final MutableStringSlice literal;
 
 //   StringThrough(String literal) : this.literal = literal.slice;
 
 //   @override
-//   (StringSlice, StringSlice) run(StringSlice input) {
+//   (MutableStringSlice, MutableStringSlice) run(MutableStringSlice input) {
 //     int literalIndex = 0;
 
 //     for (int inputIndex = 0; inputIndex < input.length; inputIndex++) {
@@ -47,13 +47,14 @@ final class StringLiteral with Parser<StringSlice, StringSlice> {
 //   }
 // }
 
-class StringLiteralNormalized with Parser<StringSlice, StringSlice> {
+class StringLiteralNormalized
+    with Parser<MutableStringSlice, MutableStringSlice> {
   final String literal;
 
   StringLiteralNormalized(this.literal);
 
   @override
-  Parser<StringSlice, StringSlice> body() {
+  Parser<MutableStringSlice, MutableStringSlice> body() {
     return OneOfLazy([
       () => StringLiteral(unorm.nfc(literal)),
       () => StringLiteral(unorm.nfd(literal)),
