@@ -3,13 +3,23 @@ import 'package:parsing/parsing.dart';
 
 class OperationBenchmark extends BenchmarkBase {
   final void Function() operation;
+  final void Function()? tearDown;
 
-  OperationBenchmark(String name, this.operation) : super("Operation - $name");
+  OperationBenchmark(String name, this.operation, {this.tearDown})
+      : super("Operation - $name");
 
   @override
   void run() {
     operation();
     super.run();
+  }
+
+  @override
+  void teardown() {
+    if (tearDown != null) {
+      print("Done: \n");
+      tearDown!.call();
+    }
   }
 }
 
@@ -73,7 +83,6 @@ class BenchmarkSuite extends BenchmarkBase {
     final benchmarks = this.benchmarks();
 
     for (var bench in benchmarks) {
-      print("Running: ${bench.name}");
       bench.report();
     }
   }
