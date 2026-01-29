@@ -21,10 +21,10 @@ void main() {
     expect(rest.toString(), "");
   });
 
-  // test("string through", () {
-  //   final input = "Lorem ipsum\nEnd";
-  //   final (result, rest) = StringThrough("\n").run(input.slice);
-  //   expect(result.iterable, "Lorem ipsum\n".codeUnits);
-  //   expect(rest.iterable, "End".codeUnits);
-  // });
+  test("string through", () {
+    final input = "Lorem ipsum\nEnd";
+    final (result, rest) = StringThrough("\n").run(MutableStringSlice(input));
+    expect(result.toString(), "Lorem ipsum\n");
+    expect(rest.toString(), "End");
+  });
 }

@@ -20,32 +20,31 @@ final class StringLiteral with Parser<MutableStringSlice, MutableStringSlice> {
   }
 }
 
-// final class StringThrough with Parser<MutableStringSlice, MutableStringSlice> {
-//   final MutableStringSlice literal;
+final class StringThrough with Parser<MutableStringSlice, MutableStringSlice> {
+  final MutableStringSlice literal;
 
-//   StringThrough(String literal) : this.literal = literal.slice;
+  StringThrough(String literal) : this.literal = MutableStringSlice(literal);
 
-//   @override
-//   (MutableStringSlice, MutableStringSlice) run(MutableStringSlice input) {
-//     int literalIndex = 0;
+  @override
+  (MutableStringSlice, MutableStringSlice) run(MutableStringSlice input) {
+    int literalIndex = 0;
 
-//     for (int inputIndex = 0; inputIndex < input.length; inputIndex++) {
-//       if (input.iterable.elementAt(inputIndex) ==
-//           literal.iterable.elementAt(literalIndex)) {
-//         literalIndex++;
-//       }
-//       if (literalIndex == literal.length) {
-//         final result = input.prefix(inputIndex + 1);
-//         final rest = input.removeFirst(inputIndex + 1);
-//         return (result, rest);
-//       }
-//     }
-//     throw ParserError(
-//       expected: input.toString(),
-//       remainingInput: input.toString(),
-//     );
-//   }
-// }
+    for (int inputIndex = 0; inputIndex < input.length; inputIndex++) {
+      if (input.codeUnitAt(inputIndex) == literal.codeUnitAt(literalIndex)) {
+        literalIndex++;
+      }
+      if (literalIndex == literal.length) {
+        final result = input.taking(inputIndex + 1);
+        input.skip(inputIndex + 1);
+        return (result, input);
+      }
+    }
+    throw ParserError(
+      expected: input.toString(),
+      remainingInput: input.toString(),
+    );
+  }
+}
 
 class StringLiteralNormalized
     with Parser<MutableStringSlice, MutableStringSlice> {
