@@ -1,21 +1,21 @@
 part of '../parsing.dart';
 
 final class StringLiteral with Parser<StringSlice, StringSlice> {
+  final String literal;
   final StringSlice literalSlice;
 
-  StringLiteral(String literalSlice)
-      : this.literalSlice = StringSlice(literalSlice);
+  StringLiteral(this.literal) : this.literalSlice = StringSlice(literal);
 
   @override
   (StringSlice, StringSlice) run(StringSlice input) {
     if (input.startsWith(literalSlice)) {
       final result = literalSlice;
-      final rest = input.removeFirst(literalSlice.length);
-      return (result, rest);
+      input.skip(literalSlice.length);
+      return (result, input);
     }
     throw ParserError(
-      expected: literalSlice.toString(),
-      remainingInput: input.toString(),
+      expected: literal,
+      remainingInput: input,
     );
   }
 }

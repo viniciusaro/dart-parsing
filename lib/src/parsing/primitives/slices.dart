@@ -2,8 +2,8 @@ part of '../parsing.dart';
 
 final class StringSlice {
   final String _source;
-  final int _startIndex;
-  final int _endIndex;
+  int _startIndex;
+  int _endIndex;
 
   int get length => _endIndex - _startIndex + 1;
 
@@ -37,11 +37,19 @@ final class StringSlice {
     return true;
   }
 
-  StringSlice prefix(int count) {
+  void take(int count) {
+    _endIndex = _endIndex - (length - count);
+  }
+
+  void skip(int count) {
+    _startIndex = _startIndex + count;
+  }
+
+  StringSlice taking(int count) {
     return StringSlice._(_source, _startIndex, _endIndex - (length - count));
   }
 
-  StringSlice removeFirst(int count) {
+  StringSlice skiping(int count) {
     return StringSlice._(_source, _startIndex + count, _endIndex);
   }
 
