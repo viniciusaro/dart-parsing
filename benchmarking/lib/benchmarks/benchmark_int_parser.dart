@@ -7,7 +7,7 @@ final intMaxIntSuite = BenchmarkSuite("Int parsers, max int", () {
 
   return [
     IntParser().bench(
-      input: () => string.slice,
+      input: () => MutableStringSlice(string),
       result: intResult,
     ),
   ];
@@ -20,7 +20,7 @@ final intLongSuffixSuite = BenchmarkSuite("Int parsers, long suffix", () {
 
   return [
     IntParser().bench(
-      input: () => string.slice,
+      input: () => MutableStringSlice(string),
       result: intResult,
     ),
   ];

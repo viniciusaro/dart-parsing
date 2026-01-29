@@ -7,7 +7,7 @@ final doubleMaxDoubleSuite = BenchmarkSuite("Double parsers, max double", () {
 
   return [
     DoubleParser().bench(
-      input: () => string.slice,
+      input: () => MutableStringSlice(string),
       result: doubleResult,
     ),
   ];
@@ -20,7 +20,7 @@ final doubleLongSuffixSuite = BenchmarkSuite("Double parsers, long suffix", () {
 
   return [
     DoubleParser().bench(
-      input: () => string.slice,
+      input: () => MutableStringSlice(string),
       result: doubleResult,
     ),
   ];

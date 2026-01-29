@@ -25,7 +25,7 @@ final nyRace = Race(City.ny, [
 
 void main() {
   test("races parser", () {
-    final (result, rest) = races.run(coordsBenchmarkInput.slice);
+    final (result, rest) = races.run(MutableStringSlice(coordsBenchmarkInput));
     expect(result.races.length, 2);
     expect(result.races.elementAt(0), bsbRace);
     expect(result.races.elementAt(1), nyRace);

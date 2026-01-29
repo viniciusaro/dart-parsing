@@ -67,7 +67,3 @@ final class MutableStringSlice {
         other._endIndex == _endIndex;
   }
 }
-
-extension StringExtensions on String {
-  MutableStringSlice get slice => MutableStringSlice(this);
-}

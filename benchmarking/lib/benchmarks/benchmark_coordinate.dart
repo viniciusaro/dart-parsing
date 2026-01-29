@@ -28,7 +28,7 @@ final coordCollectionsSuite = BenchmarkSuite(
     return [
       races.bench(
         name: "int - StringSlice on $escalation",
-        input: () => coordsBenchmarkInput.slice,
+        input: () => MutableStringSlice(coordsBenchmarkInput),
       ),
     ];
   },

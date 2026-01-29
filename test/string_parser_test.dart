@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 void main() {
   test("string literal", () {
     final (result, rest) = StringLiteral("Brasília").run(
-      "Brasília/DF".slice,
+      MutableStringSlice("Brasília/DF"),
     );
     expect(result.toString(), "Brasília");
     expect(rest.toString(), "/DF");
@@ -14,7 +14,9 @@ void main() {
     final eAcute0 = "é"; // String.fromCharCodes([0x00E9]);
     final eAcute1 = "é"; // String.fromCharCodes([0x0065, 0x0301]);
 
-    final (result, rest) = StringLiteralNormalized(eAcute0).run(eAcute1.slice);
+    final (result, rest) = StringLiteralNormalized(eAcute0).run(
+      MutableStringSlice(eAcute1),
+    );
     expect(result.toString(), eAcute1);
     expect(rest.toString(), "");
   });

@@ -44,7 +44,7 @@ class Path<O> with Parser<O, RequestInput> {
       );
     }
 
-    final (result, segmentRest) = parser.run(segment.slice);
+    final (result, segmentRest) = parser.run(MutableStringSlice(segment));
     if (segmentRest.length > 0) {
       throw ParserError(
         expected: "segment to be fully consumed",
@@ -72,7 +72,7 @@ class Query<O> with Parser<O, RequestInput> {
         remainingInput: input,
       );
     }
-    final (result, paramRest) = parser.run(param.slice);
+    final (result, paramRest) = parser.run(MutableStringSlice(param));
     if (paramRest.length > 0) {
       throw ParserError(
         expected: "param to be fully consumed",

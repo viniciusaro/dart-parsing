@@ -17,7 +17,7 @@ void main() {
   test("returns all values that match, when there are many", () {
     final input = "BSB, BSB, BSB";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
-    final (result, rest) = parser.run(input.slice);
+    final (result, rest) = parser.run(MutableStringSlice(input));
 
     expect(result, [City.bsb, City.bsb, City.bsb]);
     expect(rest.toString(), "");
@@ -26,7 +26,7 @@ void main() {
   test("many returns single value when there is only one", () {
     final input = "BSB";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
-    final (result, rest) = parser.run(input.slice);
+    final (result, rest) = parser.run(MutableStringSlice(input));
 
     expect(result, [City.bsb]);
     expect(rest.toString(), "");
@@ -36,7 +36,7 @@ void main() {
     final input = "";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
     expect(
-      () => parser.run(input.slice),
+      () => parser.run(MutableStringSlice(input)),
       throwsA(isA<ParserError>()),
     );
   });
@@ -44,7 +44,7 @@ void main() {
   test("returns rest of string after consming all matches", () {
     final input = "BSB, NY, AMS, ";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
-    final (result, rest) = parser.run(input.slice);
+    final (result, rest) = parser.run(MutableStringSlice(input));
 
     expect(result, [City.bsb, City.ny, City.ams]);
     expect(rest.toString(), ", ");
