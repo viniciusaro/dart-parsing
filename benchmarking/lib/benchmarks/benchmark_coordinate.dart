@@ -23,14 +23,20 @@ New York,
 final coordCollectionsSuite = BenchmarkSuite(
   "Coord parser",
   () {
-    final escalation = 10000;
+    final escalation = 100000;
 
     return [
       races.bench(
-        name: "int - StringSlice on $escalation",
+        name: "int - MutableStringSlice on $escalation",
         input: () => MutableStringSlice(
           List.generate(escalation, (_) => coordsBenchmarkInput).join("\n"),
         ),
+      ),
+      racesCodeUnit.bench(
+        name: "int - code unit on $escalation",
+        input: () => List.generate(escalation, (_) => coordsBenchmarkInput)
+            .join("\n")
+            .codeUnits,
       ),
     ];
   },
