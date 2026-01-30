@@ -1,6 +1,6 @@
 import 'package:benchmarking/example/example.dart';
 import 'package:benchmarking/parsers.dart';
-import 'package:parsing/parsing.dart';
+import 'package:parsing/extra.dart';
 
 final coordsBenchmarkInput = """
 Brasília,
@@ -27,16 +27,16 @@ final coordCollectionsSuite = BenchmarkSuite(
 
     return [
       races.bench(
-        name: "int - MutableStringSlice on $escalation",
-        input: () => MutableStringSlice(
-          List.generate(escalation, (_) => coordsBenchmarkInput).join("\n"),
-        ),
-      ),
-      racesCodeUnit.bench(
         name: "int - code unit on $escalation",
         input: () => List.generate(escalation, (_) => coordsBenchmarkInput)
             .join("\n")
             .codeUnits,
+      ),
+      racesSlice.bench(
+        name: "int - MutableStringSlice on $escalation",
+        input: () => MutableStringSlice(
+          List.generate(escalation, (_) => coordsBenchmarkInput).join("\n"),
+        ),
       ),
     ];
   },

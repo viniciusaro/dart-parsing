@@ -1,5 +1,3 @@
-part of '../parsing.dart';
-
 final class MutableStringSlice {
   final String _source;
   int _startIndex;
@@ -37,20 +35,20 @@ final class MutableStringSlice {
     return true;
   }
 
-  void take(int count) {
+  void taking(int count) {
     _endIndex = _endIndex - (length - count);
   }
 
-  void skip(int count) {
+  void skiping(int count) {
     _startIndex = _startIndex + count;
   }
 
-  MutableStringSlice taking(int count) {
+  MutableStringSlice take(int count) {
     return MutableStringSlice._(
         _source, _startIndex, _endIndex - (length - count));
   }
 
-  MutableStringSlice skiping(int count) {
+  MutableStringSlice skip(int count) {
     return MutableStringSlice._(_source, _startIndex + count, _endIndex);
   }
 

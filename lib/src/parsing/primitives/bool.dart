@@ -1,8 +1,8 @@
 part of '../parsing.dart';
 
-class BoolParser with Parser<bool, MutableStringSlice> {
+class BoolParser with Parser<bool, CodeUnits> {
   @override
-  Parser<bool, MutableStringSlice> body() {
+  Parser<bool, CodeUnits> body() {
     return OneOf([
       StringLiteral("true").map((_) => true),
       StringLiteral("false").map((_) => false),

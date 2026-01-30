@@ -1,19 +1,21 @@
 part of '../parsing.dart';
 
-class IntParser with Parser<int, MutableStringSlice> {
+class IntParser with Parser<int, CodeUnits> {
   @override
-  (int, MutableStringSlice) run(MutableStringSlice input) {
+  (int, CodeUnits) run(CodeUnits input) {
     int matchesCount = 0;
     for (var i = 0; i < input.length; i++) {
-      final unit = input.codeUnitAt(i);
+      final unit = input.elementAt(i);
       if (unit < 48 || unit > 57) break;
       matchesCount++;
     }
 
     try {
-      final intResult = int.parse(input.taking(matchesCount).toString());
-      input.skip(matchesCount);
-      return (intResult, input);
+      final intResult = int.parse(
+        String.fromCharCodes(input.take(matchesCount)),
+      );
+      final result = input.skip(matchesCount);
+      return (intResult, result);
     } catch (e) {
       throw ParserError(
         expected: "Int",

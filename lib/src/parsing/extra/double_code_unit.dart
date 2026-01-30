@@ -1,14 +1,15 @@
 import 'package:parsing/parsing.dart';
 
 import 'int_code_unit.dart';
+import 'slices.dart';
 import 'string_code_unit.dart';
 
-final class DoubleParserCodeUnit with Parser<double, Iterable<int>> {
+final class DoubleParserSlice with Parser<double, MutableStringSlice> {
   @override
-  Parser<double, Iterable<int>> body() {
+  Parser<double, MutableStringSlice> body() {
     final dotOrComma = OneOf([
-      StringLiteralCodeUnit(","),
-      StringLiteralCodeUnit("."),
+      StringLiteralSlice(","),
+      StringLiteralSlice("."),
     ]);
 
     final parseDoubleFromTuple = ((int, int?) tuple) {
@@ -17,9 +18,9 @@ final class DoubleParserCodeUnit with Parser<double, Iterable<int>> {
           : tuple.$1.toDouble();
     };
 
-    return IntParserCodeUnit()
+    return IntParserSlice()
         .skip(OptionalParser(dotOrComma))
-        .take(OptionalParser(IntParserCodeUnit()))
+        .take(OptionalParser(IntParserSlice()))
         .map(parseDoubleFromTuple);
   }
 }

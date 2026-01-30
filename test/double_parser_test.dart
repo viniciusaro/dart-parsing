@@ -5,16 +5,16 @@ void main() {
   test("code units prefix", () {
     final parser = DoubleParser();
 
-    final (result1, rest1) = parser.run(MutableStringSlice("42.1"));
+    final (result1, rest1) = parser.run("42.1".codeUnits);
     expect(result1, 42.1);
-    expect(rest1.toString(), "");
+    expect(rest1, "".codeUnits);
 
-    var (result2, rest2) = parser.run(MutableStringSlice("42"));
+    var (result2, rest2) = parser.run("42".codeUnits);
     expect(result2, 42);
-    expect(rest2.toString(), "");
+    expect(rest2, "".codeUnits);
 
-    var (result3, rest3) = parser.run(MutableStringSlice("42."));
+    var (result3, rest3) = parser.run("42.".codeUnits);
     expect(result3, 42);
-    expect(rest3.toString(), "");
+    expect(rest3, "".codeUnits);
   });
 }

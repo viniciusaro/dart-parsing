@@ -1,17 +1,17 @@
 part of '../parsing.dart';
 
-final class StringLiteral with Parser<MutableStringSlice, MutableStringSlice> {
+final class StringLiteral with Parser<CodeUnits, CodeUnits> {
   final String literal;
-  final MutableStringSlice literalSlice;
+  final CodeUnits codeUnits;
 
-  StringLiteral(this.literal) : this.literalSlice = MutableStringSlice(literal);
+  StringLiteral(this.literal) : this.codeUnits = literal.codeUnits;
 
   @override
-  (MutableStringSlice, MutableStringSlice) run(MutableStringSlice input) {
-    if (input.startsWith(literalSlice)) {
-      final result = literalSlice;
-      input.skip(literalSlice.length);
-      return (result, input);
+  (CodeUnits, CodeUnits) run(CodeUnits input) {
+    if (input.startsWith(codeUnits)) {
+      final result = codeUnits;
+      final rest = input.skip(codeUnits.length);
+      return (result, rest);
     }
     throw ParserError(
       expected: literal,
@@ -20,21 +20,21 @@ final class StringLiteral with Parser<MutableStringSlice, MutableStringSlice> {
   }
 }
 
-final class StringThrough with Parser<MutableStringSlice, MutableStringSlice> {
-  final MutableStringSlice literal;
+final class StringThrough with Parser<CodeUnits, CodeUnits> {
+  final CodeUnits literal;
 
-  StringThrough(String literal) : this.literal = MutableStringSlice(literal);
+  StringThrough(String literal) : this.literal = literal.codeUnits;
 
   @override
-  (MutableStringSlice, MutableStringSlice) run(MutableStringSlice input) {
+  (CodeUnits, CodeUnits) run(CodeUnits input) {
     int literalIndex = 0;
 
     for (int inputIndex = 0; inputIndex < input.length; inputIndex++) {
-      if (input.codeUnitAt(inputIndex) == literal.codeUnitAt(literalIndex)) {
+      if (input.elementAt(inputIndex) == literal.elementAt(literalIndex)) {
         literalIndex++;
       }
       if (literalIndex == literal.length) {
-        final result = input.taking(inputIndex + 1);
+        final result = input.take(inputIndex + 1);
         input.skip(inputIndex + 1);
         return (result, input);
       }
@@ -46,14 +46,13 @@ final class StringThrough with Parser<MutableStringSlice, MutableStringSlice> {
   }
 }
 
-class StringLiteralNormalized
-    with Parser<MutableStringSlice, MutableStringSlice> {
+class StringLiteralNormalized with Parser<CodeUnits, CodeUnits> {
   final String literal;
 
   StringLiteralNormalized(this.literal);
 
   @override
-  Parser<MutableStringSlice, MutableStringSlice> body() {
+  Parser<CodeUnits, CodeUnits> body() {
     return OneOfLazy([
       () => StringLiteral(unorm.nfc(literal)),
       () => StringLiteral(unorm.nfd(literal)),

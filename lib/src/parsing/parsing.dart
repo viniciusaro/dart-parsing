@@ -16,8 +16,9 @@ part 'take.dart';
 part 'primitives/bool.dart';
 part 'primitives/double.dart';
 part 'primitives/int.dart';
-part 'primitives/slices.dart';
 part 'primitives/string.dart';
+
+typedef CodeUnits = Iterable<int>;
 
 mixin Parser<A, Input> {
   (A, Input) run(Input input) {

@@ -4,32 +4,32 @@ import 'package:test/test.dart';
 
 void main() {
   test("single integer", () {
-    final (result, rest) = IntParserCodeUnit().run("42".codeUnits);
+    final (result, rest) = IntParserSlice().run(MutableStringSlice("42"));
     expect(result, 42);
-    expect(rest, "".codeUnits);
+    expect(rest.toString(), "");
   });
 
   test("integer and some value", () {
-    final (result, rest) = IntParserCodeUnit().run("42A".codeUnits);
+    final (result, rest) = IntParserSlice().run(MutableStringSlice("42A"));
     expect(result, 42);
-    expect(rest, "A".codeUnits);
+    expect(rest.toString(), "A");
   });
 
   test("integer and dot", () {
-    final (result, rest) = IntParserCodeUnit().run("42.0".codeUnits);
+    final (result, rest) = IntParserSlice().run(MutableStringSlice("42.0"));
     expect(result, 42);
-    expect(rest, ".0".codeUnits);
+    expect(rest.toString(), ".0");
   });
 
   test("integer and comma", () {
-    final (result, rest) = IntParserCodeUnit().run("42,0".codeUnits);
+    final (result, rest) = IntParserSlice().run(MutableStringSlice("42,0"));
     expect(result, 42);
-    expect(rest, ",0".codeUnits);
+    expect(rest.toString(), ",0");
   });
 
   test("some value and an integer", () {
     expect(
-      () => IntParserCodeUnit().run("A42".codeUnits),
+      () => IntParserSlice().run(MutableStringSlice("A42")),
       throwsA(isA<ParserError>()),
     );
   });

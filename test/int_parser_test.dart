@@ -3,32 +3,32 @@ import 'package:test/test.dart';
 
 void main() {
   test("single integer", () {
-    final (result, rest) = IntParser().run(MutableStringSlice("42"));
+    final (result, rest) = IntParser().run("42".codeUnits);
     expect(result, 42);
-    expect(rest.toString(), "");
+    expect(rest, "".codeUnits);
   });
 
   test("integer and some value", () {
-    final (result, rest) = IntParser().run(MutableStringSlice("42A"));
+    final (result, rest) = IntParser().run("42A".codeUnits);
     expect(result, 42);
-    expect(rest.toString(), "A");
+    expect(rest, "A".codeUnits);
   });
 
   test("integer and dot", () {
-    final (result, rest) = IntParser().run(MutableStringSlice("42.0"));
+    final (result, rest) = IntParser().run("42.0".codeUnits);
     expect(result, 42);
-    expect(rest.toString(), ".0");
+    expect(rest, ".0".codeUnits);
   });
 
   test("integer and comma", () {
-    final (result, rest) = IntParser().run(MutableStringSlice("42,0"));
+    final (result, rest) = IntParser().run("42,0".codeUnits);
     expect(result, 42);
-    expect(rest.toString(), ",0");
+    expect(rest, ",0".codeUnits);
   });
 
   test("some value and an integer", () {
     expect(
-      () => IntParser().run(MutableStringSlice("A42")),
+      () => IntParser().run("A42".codeUnits),
       throwsA(isA<ParserError>()),
     );
   });
