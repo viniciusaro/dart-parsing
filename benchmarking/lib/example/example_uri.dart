@@ -1,7 +1,7 @@
 part of 'example.dart';
 
-class UriParser<O> with Parser<Uri?, O> {
-  final Parser<RequestInput, O> requestInputParser;
+class UriParser<O> with Parser<O, Uri?> {
+  final Parser<O, RequestInput> requestInputParser;
   UriParser(this.requestInputParser);
 
   @override
@@ -17,7 +17,7 @@ class UriParser<O> with Parser<Uri?, O> {
   }
 }
 
-class End with Parser<RequestInput, Unit> {
+class End with Parser<Unit, RequestInput> {
   @override
   (Unit, RequestInput) run(RequestInput input) {
     if (input != RequestInput.empty()) {
@@ -30,8 +30,8 @@ class End with Parser<RequestInput, Unit> {
   }
 }
 
-class Path<O> with Parser<RequestInput, O> {
-  final Parser<IterableCollection<int>, O> parser;
+class Path<O> with Parser<O, RequestInput> {
+  final Parser<O, CodeUnits> parser;
   Path(this.parser);
 
   @override
@@ -44,8 +44,8 @@ class Path<O> with Parser<RequestInput, O> {
       );
     }
 
-    final (result, segmentRest) = parser.run(segment.codeUnits.collection);
-    if (segmentRest.length > 0) {
+    final (result, segmentRest) = parser.run(segment.codeUnits);
+    if (segmentRest.isNotEmpty) {
       throw ParserError(
         expected: "segment to be fully consumed",
         remainingInput: input,
@@ -58,9 +58,9 @@ class Path<O> with Parser<RequestInput, O> {
   }
 }
 
-class Query<O> with Parser<RequestInput, O> {
+class Query<O> with Parser<O, RequestInput> {
   final String name;
-  final Parser<IterableCollection<int>, O> parser;
+  final Parser<O, CodeUnits> parser;
   Query(this.name, this.parser);
 
   @override
@@ -72,8 +72,8 @@ class Query<O> with Parser<RequestInput, O> {
         remainingInput: input,
       );
     }
-    final (result, paramRest) = parser.run(param.codeUnits.collection);
-    if (paramRest.length > 0) {
+    final (result, paramRest) = parser.run(param.codeUnits);
+    if (paramRest.isNotEmpty) {
       throw ParserError(
         expected: "param to be fully consumed",
         remainingInput: input,

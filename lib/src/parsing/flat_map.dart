@@ -1,8 +1,8 @@
 part of 'parsing.dart';
 
-class FlatMapParser<Input, A, B> with Parser<Input, B> {
-  final Parser<Input, A> upstream;
-  final Parser<Input, B> Function(A) transform;
+class FlatMapParser<A, B, Input> with Parser<B, Input> {
+  final Parser<A, Input> upstream;
+  final Parser<B, Input> Function(A) transform;
 
   FlatMapParser(this.upstream, this.transform);
 

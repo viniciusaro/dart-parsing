@@ -1,7 +1,7 @@
 part of 'parsing.dart';
 
-class MapParser<Input, A, B> with Parser<Input, B> {
-  final Parser<Input, A> upstream;
+class MapParser<A, B, Input> with Parser<B, Input> {
+  final Parser<A, Input> upstream;
   final B Function(A) t;
 
   MapParser(this.upstream, this.t);

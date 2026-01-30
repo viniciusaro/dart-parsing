@@ -26,7 +26,7 @@ class ParserError {
   String toString() {
     return """
     Parser Error:
-    expected: $expected
+    expected: ${expected.length > 50 ? expected.substring(0, 50) + "..." : expected}
     remaining: $remainingInput
     """;
   }

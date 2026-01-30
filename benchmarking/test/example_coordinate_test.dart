@@ -1,26 +1,7 @@
+import 'package:benchmarking/benchmarks/benchmark_coordinate.dart';
 import 'package:benchmarking/example/example.dart';
-import 'package:parsing/parsing.dart';
+import 'package:parsing/extra.dart';
 import 'package:test/test.dart';
-
-final _coord = """
-Brasília,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-New York,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W,
-15.832373° S, 47.987751° W""";
-
-final racesInput = List.generate(1000, (_) => _coord).join(",\n");
 
 final bsbRace = Race(City.bsb, [
   Coordinate(-15.832373, -47.987751),
@@ -32,16 +13,66 @@ final bsbRace = Race(City.bsb, [
   Coordinate(-15.832373, -47.987751),
 ]);
 
+final nyRace = Race(City.ny, [
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+  Coordinate(-15.832373, -47.987751),
+]);
+
 void main() {
-  test("races parser", () {
-    final (result, rest) = races.run(racesInput.codeUnits.collection);
-    expect(result.races.first, bsbRace);
-    expect(rest.iterable, "".codeUnits);
+  test("city parser", () {
+    final (result, rest) = city.run("Brasília".codeUnits);
+    expect(result, City.bsb);
+    expect(rest, "".codeUnits);
   });
 
-  test("races string parser", () {
-    final (result, rest) = racesString.run(racesInput.collection);
-    expect(result.races.first, bsbRace);
-    expect(rest.iterable, "".codeUnits);
+  test("city slice parser", () {
+    final (result, rest) = citySlice.run(MutableStringSlice("Brasília"));
+    expect(result, City.bsb);
+    expect(rest.toString(), "");
+  });
+
+  test("coordinate parser", () {
+    final (result, rest) = coord.run("15.832373° S, 47.987751° W".codeUnits);
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest, "".codeUnits);
+  });
+
+  test("coordinate slice parser", () {
+    final (result, rest) = coordSlice.run(
+      MutableStringSlice("15.832373° S, 47.987751° W"),
+    );
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest.toString(), "");
+  });
+
+  test("coordinate regex parser", () {
+    final (result, rest) = BenchmarkCoordinateRegexParser().run(
+      "15.832373° S, 47.987751° W\n15.832373° S, 47.987751° W\n",
+    );
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest.toString(), "15.832373° S, 47.987751° W\n");
+  });
+
+  test("races parser", () {
+    final (result, rest) = races.run(raceCoordsBenchmarkInput.codeUnits);
+    expect(result.races.length, 2);
+    expect(result.races.elementAt(0), bsbRace);
+    expect(result.races.elementAt(1), nyRace);
+    expect(rest, "".codeUnits);
+  });
+
+  test("races slices parser", () {
+    final (result, rest) = racesSlice.run(
+      MutableStringSlice(raceCoordsBenchmarkInput),
+    );
+    expect(result.races.length, 2);
+    expect(result.races.elementAt(0), bsbRace);
+    expect(result.races.elementAt(1), nyRace);
+    expect(rest.toString(), "");
   });
 }

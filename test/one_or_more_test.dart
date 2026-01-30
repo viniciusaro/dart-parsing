@@ -17,26 +17,26 @@ void main() {
   test("returns all values that match, when there are many", () {
     final input = "BSB, BSB, BSB";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
-    final (result, rest) = parser.run(input.codeUnits.collection);
+    final (result, rest) = parser.run(input.codeUnits);
 
     expect(result, [City.bsb, City.bsb, City.bsb]);
-    expect(rest.stringValue, "");
+    expect(rest, "".codeUnits);
   });
 
   test("many returns single value when there is only one", () {
     final input = "BSB";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
-    final (result, rest) = parser.run(input.codeUnits.collection);
+    final (result, rest) = parser.run(input.codeUnits);
 
     expect(result, [City.bsb]);
-    expect(rest.stringValue, "");
+    expect(rest, "".codeUnits);
   });
 
   test("throws on empty input", () {
     final input = "";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
     expect(
-      () => parser.run(input.codeUnits.collection),
+      () => parser.run(input.codeUnits),
       throwsA(isA<ParserError>()),
     );
   });
@@ -44,9 +44,9 @@ void main() {
   test("returns rest of string after consming all matches", () {
     final input = "BSB, NY, AMS, ";
     final parser = OneOrMore(city, separator: StringLiteral(", "));
-    final (result, rest) = parser.run(input.codeUnits.collection);
+    final (result, rest) = parser.run(input.codeUnits);
 
     expect(result, [City.bsb, City.ny, City.ams]);
-    expect(rest.stringValue, ", ");
+    expect(rest, ", ".codeUnits);
   });
 }

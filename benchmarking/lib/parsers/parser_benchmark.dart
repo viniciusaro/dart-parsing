@@ -3,22 +3,31 @@ import 'package:parsing/parsing.dart';
 
 class OperationBenchmark extends BenchmarkBase {
   final void Function() operation;
+  final void Function()? tearDown;
 
-  OperationBenchmark(String name, this.operation) : super("Operation - $name");
+  OperationBenchmark(String name, this.operation, {this.tearDown})
+      : super("Operation - $name");
 
   @override
   void run() {
     operation();
     super.run();
   }
+
+  @override
+  void teardown() {
+    if (tearDown != null) {
+      print("Done: \n");
+      tearDown!.call();
+    }
+  }
 }
 
-class ParserBenchmark<Input, A> extends BenchmarkBase {
-  final Parser<Input, A> Function() parserBuilder;
-  final ParserBenchmarkData<Input, A> Function() subjectBuilder;
+class ParserBenchmark<A, Input> extends BenchmarkBase {
+  final Parser<A, Input> Function() parserBuilder;
+  final ParserBenchmarkData<A, Input> Function() subjectBuilder;
 
-  late Parser<Input, A> parser;
-  late ParserBenchmarkData<Input, A> subject;
+  late Parser<A, Input> parser;
 
   ParserBenchmark(String? name, this.parserBuilder, this.subjectBuilder)
       : super(name ?? parserBuilder().runtimeType.toString());
@@ -26,12 +35,12 @@ class ParserBenchmark<Input, A> extends BenchmarkBase {
   @override
   void setup() {
     parser = parserBuilder();
-    subject = subjectBuilder();
     super.setup();
   }
 
   @override
   void run() {
+    final subject = subjectBuilder();
     final (result, _) = parser.run(subject.input);
     if (subject.result != null) {
       assert(result == subject.result);
@@ -39,23 +48,23 @@ class ParserBenchmark<Input, A> extends BenchmarkBase {
   }
 }
 
-class ParserBenchmarkData<Input, A> {
+class ParserBenchmarkData<A, Input> {
   final Input input;
   final A? result;
 
   ParserBenchmarkData({required this.input, required this.result});
 }
 
-extension ParserBenchmarking<Input, A> on Parser<Input, A> {
-  ParserBenchmark<Input, A> bench({
+extension ParserBenchmarking<A, Input> on Parser<A, Input> {
+  ParserBenchmark<A, Input> bench({
     String? name,
-    required Input input,
+    required Input Function() input,
     A? result,
   }) {
     return ParserBenchmark(
       name,
       () => this,
-      () => ParserBenchmarkData(input: input, result: result),
+      () => ParserBenchmarkData(input: input(), result: result),
     );
   }
 }

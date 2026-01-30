@@ -9,11 +9,11 @@ final city = OneOf([
   StringLiteral("Amsterdam").map((_) => City.ams),
 ]);
 
-final cityString = OneOf([
-  StringLiteralString("Bras")
-      .skip(StringLiteralNormalizedString("í"))
-      .skip(StringLiteralString("lia"))
+final citySlice = OneOf([
+  StringLiteralSlice("Bras")
+      .skip(StringLiteralSliceNormalized("í"))
+      .skip(StringLiteralSlice("lia"))
       .map((_) => City.bsb),
-  StringLiteralString("New York").map((_) => City.ny),
-  StringLiteralString("Amsterdam").map((_) => City.ams),
+  StringLiteralSlice("New York").map((_) => City.ny),
+  StringLiteralSlice("Amsterdam").map((_) => City.ams),
 ]);

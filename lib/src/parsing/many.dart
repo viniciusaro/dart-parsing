@@ -1,10 +1,10 @@
 part of 'parsing.dart';
 
-class Many<Input, A> with Parser<Input, List<A>> {
-  final Parser<Input, A> upstream;
-  final Parser<Input, Unit>? separator;
+class Many<A, Input> with Parser<List<A>, Input> {
+  final Parser<A, Input> upstream;
+  final Parser<Unit, Input>? separator;
 
-  Many(this.upstream, {Parser<Input, dynamic>? separator})
+  Many(this.upstream, {Parser<dynamic, Input>? separator})
       : separator = separator?.map(toUnit);
 
   @override

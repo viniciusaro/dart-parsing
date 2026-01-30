@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:benchmarking/parsers.dart';
 import 'package:parsing/parsing.dart';
 
@@ -9,31 +7,7 @@ final intMaxIntSuite = BenchmarkSuite("Int parsers, max int", () {
 
   return [
     IntParser().bench(
-      input: string.codeUnits.collection,
-      result: intResult,
-    ),
-    IntParserString().bench(
-      input: string.collection,
-      result: intResult,
-    ),
-    IntParserRegex().bench(
-      input: string,
-      result: intResult,
-    ),
-    IntParserStringPrefix().bench(
-      input: string,
-      result: intResult,
-    ),
-    IntParserCodeUnits().bench(
-      input: string.codeUnits.collection,
-      result: intResult,
-    ),
-    IntParserRunesPrefix().bench(
-      input: string.runes.collection,
-      result: intResult,
-    ),
-    IntParserBytesPrefix().bench(
-      input: utf8.encode(string).collection,
+      input: () => string.codeUnits,
       result: intResult,
     ),
   ];
@@ -46,31 +20,7 @@ final intLongSuffixSuite = BenchmarkSuite("Int parsers, long suffix", () {
 
   return [
     IntParser().bench(
-      input: string.codeUnits.collection,
-      result: intResult,
-    ),
-    IntParserString().bench(
-      input: string.collection,
-      result: intResult,
-    ),
-    IntParserRegex().bench(
-      input: string,
-      result: intResult,
-    ),
-    IntParserStringPrefix().bench(
-      input: string,
-      result: intResult,
-    ),
-    IntParserCodeUnits().bench(
-      input: string.codeUnits.collection,
-      result: intResult,
-    ),
-    IntParserRunesPrefix().bench(
-      input: string.runes.collection,
-      result: intResult,
-    ),
-    IntParserBytesPrefix().bench(
-      input: utf8.encode(string).collection,
+      input: () => string.codeUnits,
       result: intResult,
     ),
   ];

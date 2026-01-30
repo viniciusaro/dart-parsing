@@ -1,6 +1,6 @@
 part of 'parsing.dart';
 
-class Always<Input, A> with Parser<Input, A> {
+class Always<A, Input> with Parser<A, Input> {
   final A value;
 
   Always(this.value);

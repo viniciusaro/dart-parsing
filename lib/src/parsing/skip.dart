@@ -1,8 +1,8 @@
 part of 'parsing.dart';
 
-class Skip<Input, A, B> with Parser<Input, A> {
-  final Parser<Input, A> upstreamA;
-  final Parser<Input, B> upstreamB;
+class Skip<A, B, Input> with Parser<A, Input> {
+  final Parser<A, Input> upstreamA;
+  final Parser<B, Input> upstreamB;
 
   Skip(this.upstreamA, this.upstreamB);
 
@@ -14,13 +14,13 @@ class Skip<Input, A, B> with Parser<Input, A> {
   }
 }
 
-class SkipFirst<Input, A> with Parser<Input, Unit> {
-  final Parser<Input, A> upstream;
+class SkipFirst<A, Input> with Parser<Unit, Input> {
+  final Parser<A, Input> upstream;
 
   SkipFirst(this.upstream);
 
   @override
-  Parser<Input, Unit> body() {
+  Parser<Unit, Input> body() {
     return upstream.map((_) => unit);
   }
 }
