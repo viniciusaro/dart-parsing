@@ -27,20 +27,6 @@ Key ideas:
 
 ---
 
-## Core idea
-
-The library is centered around a simple mixin-based parser type. Parsers can be transformed and combined using a small set of fluent operations, such as:
-
-- `.map(...)` – transform the parsed result
-- `.take(...)` – run two parsers in sequence and keep both results
-- `.skip(...)` – run two parsers in sequence and discard one side
-- `OneOf(...)` – try multiple alternatives
-- `Many(...)` / `OneOrMore(...)` – repetition
-
-Using these primitives, you can model grammars directly in Dart code in a declarative style.
-
----
-
 ## Example: parsing geographic coordinates
 
 Suppose we want to parse coordinates like:
@@ -102,9 +88,46 @@ final coord = lat
 
 ---
 
+## Example: parsing race coordinates:
+
+With coordinates building blocks we can implement even more complex parsers:
+
+```dart
+final input = """
+Brasília,
+15.793889° S, 47.882778° W,
+15.801389° S, 47.900833° W,
+15.789167° S, 47.929722° W,
+15.820556° S, 47.864444° W,
+15.835278° S, 47.912222° W,
+15.775000° S, 47.885556° W,
+15.808611° S, 47.952500° W,
+New York,
+40.782865° N, 73.965355° W,
+40.748817° N, 73.985428° W,
+40.706086° N, 74.008584° W,
+40.730610° N, 73.935242° W,
+40.758896° N, 73.985130° W,
+40.752726° N, 73.977229° W,
+40.689247° N, 74.044502° W"""
+```
+
+Each city is followed by multiple coordinate points, which can then be mapped into domain objects.
+
+---
+
 ### Parsing races with multiple coordinates
 
 ```dart
+final city = OneOf([
+  StringLiteral("Bras")
+      .skip(StringLiteralNormalized("í"))
+      .skip(StringLiteral("lia"))
+      .map((_) => City.bsb),
+  StringLiteral("New York").map((_) => City.ny),
+  StringLiteral("Amsterdam").map((_) => City.ams),
+]);
+
 final race = city
     .skip(StringLiteral(",\n"))
     .take(Many(coord, separator: StringLiteral(",\n")))
@@ -116,6 +139,11 @@ final races =
 ```
 
 At this point, we are not just parsing strings — we are describing a domain grammar directly in code.
+
+Usage:
+```dart
+final racesModel = races.run(input.codeUnits);
+```
 
 ---
 
@@ -152,18 +180,6 @@ And some common combinators:
 
 ---
 
-## Philosophy
-
-This library favors:
-
-- Small, orthogonal primitives
-- Composition over inheritance
-- Declarative style over stateful parsing logic
-
-The intent is to keep the parsing code close to the domain it represents, so that grammars remain understandable as they grow.
-
----
-
 ## Status
 
 This project is still evolving. APIs may change as new composition patterns and use cases appear.
@@ -174,4 +190,4 @@ Feedback, issues, and contributions are welcome.
 
 ## License
 
-MIT License (or your chosen license)
+MIT License
