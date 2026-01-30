@@ -3,6 +3,7 @@ import 'package:benchmarking/cli.dart' as cli;
 void main(List<String> arguments) {
   // cli.intMaxIntSuite.report();
   // cli.intLongSuffixSuite.report();
+  // cli.racesCoordCollectionsSuite.report();
   cli.coordCollectionsSuite.report();
 
   // cli.doubleMaxDoubleSuite.report();

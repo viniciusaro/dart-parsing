@@ -36,8 +36,30 @@ void main() {
     expect(rest.toString(), "");
   });
 
+  test("coordinate parser", () {
+    final (result, rest) = coord.run("15.832373° S, 47.987751° W".codeUnits);
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest, "".codeUnits);
+  });
+
+  test("coordinate slice parser", () {
+    final (result, rest) = coordSlice.run(
+      MutableStringSlice("15.832373° S, 47.987751° W"),
+    );
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest.toString(), "");
+  });
+
+  test("coordinate regex parser", () {
+    final (result, rest) = BenchmarkCoordinateRegexParser().run(
+      "15.832373° S, 47.987751° W\n15.832373° S, 47.987751° W\n",
+    );
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest.toString(), "15.832373° S, 47.987751° W\n");
+  });
+
   test("races parser", () {
-    final (result, rest) = races.run(coordsBenchmarkInput.codeUnits);
+    final (result, rest) = races.run(raceCoordsBenchmarkInput.codeUnits);
     expect(result.races.length, 2);
     expect(result.races.elementAt(0), bsbRace);
     expect(result.races.elementAt(1), nyRace);
@@ -46,7 +68,7 @@ void main() {
 
   test("races slices parser", () {
     final (result, rest) = racesSlice.run(
-      MutableStringSlice(coordsBenchmarkInput),
+      MutableStringSlice(raceCoordsBenchmarkInput),
     );
     expect(result.races.length, 2);
     expect(result.races.elementAt(0), bsbRace);

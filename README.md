@@ -16,7 +16,7 @@ Common parsing approaches usually fall into one of these categories:
 - Hand-written parsers — flexible, but often verbose and error-prone
 - Parser generators — powerful, but heavyweight and not always idiomatic in Dart
 
-`dart-parsing` takes a different approach. It focuses on small building blocks that can be composed into larger parsers in a way that stays readable and maintainable.
+`dart-parsing` focuses on small building blocks that can be composed into larger parsers in a way that stays readable and maintainable.
 
 Key ideas:
 
@@ -27,15 +27,13 @@ Key ideas:
 
 ---
 
-## Example: parsing geographic coordinates
+## Quick example
 
-Suppose we want to parse coordinates like:
+Here is a small parser that reads a latitude like:
 
 ```
-15.832373° S, 47.987751° W
+15.832373° S
 ```
-
-### Direction signs
 
 ```dart
 final northSouthSign = OneOf([
@@ -43,129 +41,62 @@ final northSouthSign = OneOf([
   StringLiteral("S").map((_) => -1),
 ]);
 
-final eastWestSign = OneOf([
-  StringLiteral("E").map((_) => 1),
-  StringLiteral("W").map((_) => -1),
-]);
-```
-
-Each of these parsers returns a multiplier for the coordinate value.
-
----
-
-### Latitude and longitude
-
-```dart
-// "15.832373° S"
 final lat = DoubleParser()
     .skip(StringLiteral("°"))
     .skip(StringLiteral(" "))
     .take(northSouthSign)
-    .map(multiplyTuple.pipe(numToDouble));
-
-// "47.987751° W"
-final lng = DoubleParser()
-    .skip(StringLiteral("°"))
-    .skip(StringLiteral(" "))
-    .take(eastWestSign)
-    .map(multiplyTuple.pipe(numToDouble));
+    .map((value, sign) => value * sign);
 ```
 
-This mirrors the structure of the input: number → degree symbol → space → direction.
+Parsers can then be combined to form larger structures in a way that mirrors the input grammar.
+
+A full example parsing multiple cities and coordinates can be found in **[EXAMPLE.md](EXAMPLE.md)**.
 
 ---
 
-### A coordinate pair
+## Performance
 
-```dart
-// "15.832373° S, 47.987751° W"
-final coord = lat
-    .skip(StringLiteral(","))
-    .skip(StringLiteral(" "))
-    .take(lng)
-    .map(Coordinate.tuple);
-```
+Although the library focuses on readability and composability, performance is a first-class concern in the implementation.
 
----
+Parsers operate directly on the input string using `codeUnits` comparisons rather than creating intermediate substrings. This keeps parsing close to a simple indexed scan over a `String`, which is both predictable and efficient in Dart.
 
-## Example: parsing race coordinates:
+Some of the key performance characteristics:
 
-With coordinates building blocks we can implement even more complex parsers:
+- **Character-level parsing**  
+  Parsers compare integer code units instead of allocating temporary `String` objects.
 
-```dart
-final input = """
-Brasília,
-15.793889° S, 47.882778° W,
-15.801389° S, 47.900833° W,
-15.789167° S, 47.929722° W,
-15.820556° S, 47.864444° W,
-15.835278° S, 47.912222° W,
-15.775000° S, 47.885556° W,
-15.808611° S, 47.952500° W,
-New York,
-40.782865° N, 73.965355° W,
-40.748817° N, 73.985428° W,
-40.706086° N, 74.008584° W,
-40.730610° N, 73.935242° W,
-40.758896° N, 73.985130° W,
-40.752726° N, 73.977229° W,
-40.689247° N, 74.044502° W"""
-```
+- **Minimal heap allocations**  
+  Most combinators pass indices and lightweight results rather than copying data.
 
-Each city is followed by multiple coordinate points, which can then be mapped into domain objects.
+- **No regex engine overhead**  
+  Parsing relies on direct control flow instead of a general-purpose regex engine.
+
+- **Composability without abstraction penalty**  
+  Even though parsers are built from small units, execution remains close to a linear scan.
 
 ---
 
-### Parsing races with multiple coordinates
+## Benchmark
 
-```dart
-final city = OneOf([
-  StringLiteral("Bras")
-      .skip(StringLiteralNormalized("í"))
-      .skip(StringLiteral("lia"))
-      .map((_) => City.bsb),
-  StringLiteral("New York").map((_) => City.ny),
-  StringLiteral("Amsterdam").map((_) => City.ams),
-]);
+A small benchmark was created to compare different strategies for parsing the same coordinate format:
 
-final race = city
-    .skip(StringLiteral(",\n"))
-    .take(Many(coord, separator: StringLiteral(",\n")))
-    .map(Race.tuple);
-
-final races =
-    OneOrMore(race, separator: StringLiteral(",\n"))
-        .map(Races.new);
+```
+15.832373° S, 47.987751° W
 ```
 
-At this point, we are not just parsing strings — we are describing a domain grammar directly in code.
+Each strategy parsed a large input string (~2,699,999 characters) **10 times**, using the default configuration from the [benchmark_harness](https://pub.dev/packages/benchmark_harness) package.
 
-Usage:
-```dart
-final racesModel = races.run(input.codeUnits);
-```
+### Results
 
----
+| Approach | Total time (µs) for 10 parses |
+|----------|-------------------------------|
+| Code unit–based parser | 41,267 µs |
+| `MutableStringSlice` parser | 40,595 µs |
+| Regex-based parser | 40,884 µs |
 
-## Building blocks
+That corresponds to roughly **~4 ms per full parse** of a ~2.7 MB input string.
 
-The library is intentionally small, but provides a set of useful primitives:
-
-| Parser | Purpose |
-|--------|---------|
-| `StringLiteral("text")` | Matches exact text |
-| `DoubleParser()` | Parses floating-point numbers |
-| `OneOf([...])` | Tries multiple alternative parsers |
-| `Many(parser, separator: ...)` | Repeated parser with an optional separator |
-| `OneOrMore(parser, separator: ...)` | Like `Many`, but requires at least one match |
-
-And some common combinators:
-
-| Method | Meaning |
-|--------|---------|
-| `.map(fn)` | Transform the result |
-| `.take(other)` | Parse both and keep both results |
-| `.skip(other)` | Parse both but discard one side |
+These results show that composable parsers can remain in the same performance class as regex-based approaches while providing significantly better structure and readability.
 
 ---
 
