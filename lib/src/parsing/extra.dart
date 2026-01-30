@@ -1,4 +1,4 @@
-export 'extra/double_code_unit.dart';
-export 'extra/int_code_unit.dart';
+export 'extra/double_slice.dart';
+export 'extra/int_slice.dart';
 export 'extra/slices.dart';
-export 'extra/string_code_unit.dart';
+export 'extra/string_slice.dart';

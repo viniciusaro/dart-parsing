@@ -1,8 +1,8 @@
 import 'package:parsing/parsing.dart';
 
-import 'int_code_unit.dart';
+import 'int_slice.dart';
 import 'slices.dart';
-import 'string_code_unit.dart';
+import 'string_slice.dart';
 
 final class DoubleParserSlice with Parser<double, MutableStringSlice> {
   @override
