@@ -116,35 +116,35 @@ class BenchmarkCoordinateRegexParser with Parser<Coordinate, String> {
 
 final class BenchmarkPetitParser with Parser<Coordinate, String> {
   // Number like 15 or 15.832373
-  final number = (petit.digit().plus() &
+  static final number = (petit.digit().plus() &
           (petit.char('.') & petit.digit().plus()).optional())
       .flatten()
       .trim()
       .map(double.parse);
 
   // Degree symbol
-  final degree = petit.char('°').trim();
+  static final degree = petit.char('°').trim();
 
   // Direction letters
-  final northSouth = (petit.char('N') | petit.char('S'))
+  static final northSouth = (petit.char('N') | petit.char('S'))
       .trim()
       .map((value) => value == 'S' ? -1 : 1);
 
-  final eastWest = (petit.char('E') | petit.char('W'))
+  static final eastWest = (petit.char('E') | petit.char('W'))
       .trim()
       .map((value) => value == 'W' ? -1 : 1);
 
+  static final latitude =
+      (number & degree & northSouth).map((values) => values[0] * values[2]);
+
+  static final longitude =
+      (number & degree & eastWest).map((values) => values[0] * values[2]);
+
+  static final coordinate = (latitude & petit.char(',').trim() & longitude)
+      .map((values) => Coordinate(values[0], values[2]));
+
   @override
   (Coordinate, String) run(String input) {
-    final latitude =
-        (number & degree & northSouth).map((values) => values[0] * values[2]);
-
-    final longitude =
-        (number & degree & eastWest).map((values) => values[0] * values[2]);
-
-    final coordinate = (latitude & petit.char(',').trim() & longitude)
-        .map((values) => Coordinate(values[0], values[2]));
-
     final result = coordinate.parse(input);
     final rest = result.buffer.substring(result.position);
 
