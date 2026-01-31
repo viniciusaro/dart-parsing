@@ -1,4 +1,4 @@
-import 'package:parsing/src/parsing/parsing.dart';
+import 'package:dart_parsing/src/parsing/parsing.dart';
 import 'package:test/test.dart';
 
 void main() {

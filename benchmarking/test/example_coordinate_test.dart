@@ -1,6 +1,6 @@
 import 'package:benchmarking/benchmarks/benchmark_coordinate.dart';
 import 'package:benchmarking/example/example.dart';
-import 'package:parsing/extra.dart';
+import 'package:dart_parsing/extra.dart';
 import 'package:test/test.dart';
 
 final bsbRace = Race(City.bsb, [

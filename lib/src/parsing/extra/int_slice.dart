@@ -1,4 +1,4 @@
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 
 import 'slices.dart';
 

@@ -1,4 +1,4 @@
-name: parsing
+name: dart_parsing
 description: "Composable, reusable, and extensible parsers for Dart."
 version: 0.1.0
 repository: https://github.com/viniciusaro/dart-parsing

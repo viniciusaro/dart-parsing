@@ -1,8 +1,8 @@
 import 'dart:core';
 import 'package:equatable/equatable.dart';
-import 'package:parsing/fp.dart';
-import 'package:parsing/extra.dart';
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/fp.dart';
+import 'package:dart_parsing/extra.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 
 part 'example_city_models.dart';
 part 'example_city.dart';
