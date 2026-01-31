@@ -11,3 +11,7 @@ The main goal is simple: write parsers that look like the grammar they implement
 ## 0.1.1
 
 Rename pacakge name from parsing to dart-parsing
+
+## 0.1.2
+
+Petit Parser bench

@@ -4,12 +4,13 @@ version: 1.0.0
 publish_to: none
 
 environment:
-  sdk: ^3.4.0
+  sdk: ^3.5.0
 
 # Add regular dependencies here.
 dependencies:
   benchmark_harness: ^2.2.2
   equatable: ^2.0.5
+  petitparser: ^7.0.1
   dart_parsing: 
     path: ../
 
