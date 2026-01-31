@@ -58,6 +58,14 @@ void main() {
     expect(rest.toString(), "15.832373° S, 47.987751° W\n");
   });
 
+  test("coordinate petit parser", () {
+    final (result, rest) = BenchmarkPetitParser().run(
+      "15.832373° S, 47.987751° W\n15.832373° S, 47.987751° W\n",
+    );
+    expect(result, Coordinate(-15.832373, -47.987751));
+    expect(rest.toString(), "15.832373° S, 47.987751° W\n");
+  });
+
   test("races parser", () {
     final (result, rest) = races.run(raceCoordsBenchmarkInput.codeUnits);
     expect(result.races.length, 2);

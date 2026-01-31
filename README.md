@@ -6,8 +6,6 @@ Composable, reusable, and extensible parsers for Dart.
 
 The main goal is simple: write parsers that look like the grammar they implement.
 
----
-
 ## Why dart-parsing?
 
 Common parsing approaches usually fall into one of these categories:
@@ -24,8 +22,6 @@ Key ideas:
 - Small parsers can be reused across different grammars
 - New behavior comes from composition, not modifying the core
 - The resulting code should describe *what* is being parsed, not *how* to move through characters
-
----
 
 ## Quick example
 
@@ -52,8 +48,6 @@ Parsers can then be combined to form larger structures in a way that mirrors the
 
 A full example parsing multiple cities and coordinates can be found in **[EXAMPLE.md](EXAMPLE.md)**.
 
----
-
 ## Performance
 
 Although the library focuses on readability and composability, performance is a first-class concern in the implementation.
@@ -74,8 +68,6 @@ Some of the key performance characteristics:
 - **Composability without abstraction penalty**  
   Even though parsers are built from small units, execution remains close to a linear scan.
 
----
-
 ## Benchmark
 
 A small benchmark was created to compare different strategies for parsing the same coordinate format:
@@ -84,21 +76,36 @@ A small benchmark was created to compare different strategies for parsing the sa
 15.832373° S, 47.987751° W
 ```
 
-Each strategy parsed a large input string (~2,699,999 characters) **10 times**, using the default configuration from the [benchmark_harness](https://pub.dev/packages/benchmark_harness) package.
+Each strategy parsed a large input string containing many concatenated coordinates.
+
+- **Input length:** 269,999,999 characters  
+- **Approx. size:** 539,999,998 bytes (UTF-16 code units)  
+- Each benchmark ran using the default configuration from the [benchmark_harness](https://pub.dev/packages/benchmark_harness) package.
 
 ### Results
 
-| Approach | Total time (µs) for 10 parses |
-|----------|-------------------------------|
-| Code unit–based parser | 41,267 µs |
-| `MutableStringSlice` parser | 40,595 µs |
-| Regex-based parser | 40,884 µs |
+| Approach | Total time (µs) |
+|----------|-----------------|
+| Code unit–based parser | 3,439,030 µs |
+| String slice-based parser | 3,524,248.5 µs |
+| Regex-based parser | 3,812,673 µs |
+| PetitParser | 3,778,925.5 µs |
 
-That corresponds to roughly **~4 ms per full parse** of a ~2.7 MB input string.
+That corresponds to roughly **3.4–3.8 seconds** to parse ~540 MB of UTF-16 input.
 
-These results show that composable parsers can remain in the same performance class as regex-based approaches while providing significantly better structure and readability.
+- All approaches complete within the same general performance band, showing that Dart can handle large-scale text parsing efficiently.
+- The code unit–based parser is the fastest in this benchmark, while still using fully composable parser building blocks.
+- The string slices approach shows similar performance, demonstrating that alternative string-view strategies can also scale well.
+- Both the regex engine and PetitParser perform respectably, but come with additional abstraction or engine overhead compared to the direct code unit approach.
+- These results reinforce that a composable, declarative parser design can remain competitive even at very large input sizes.
 
----
+Benchmark results can vary depending on:
+
+- Dart VM warm-up and JIT optimizations  
+- Allocation patterns and GC timing  
+- Input characteristics (length, structure, failure cases)
+
+The key takeaway is not just which approach is fastest, but that structured, combinator-style parsers can scale to very large inputs while remaining readable and maintainable.
 
 ## When to use this
 
@@ -108,16 +115,6 @@ These results show that composable parsers can remain in the same performance cl
 - You are parsing structured text formats (configs, coordinates, small DSLs, logs, etc.)
 - Regular expressions are becoming difficult to maintain
 - You want a strongly-typed parsing pipeline
-
----
-
-## Status
-
-This project is still evolving. APIs may change as new composition patterns and use cases appear.
-
-Feedback, issues, and contributions are welcome.
-
----
 
 ## License
 

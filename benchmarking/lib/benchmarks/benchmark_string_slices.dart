@@ -102,12 +102,6 @@ final class MutableBenchmarkStringSlice {
       : startIndex = 0,
         endIndex = source.length - 1;
 
-  MutableBenchmarkStringSlice._(
-    this.source,
-    this.startIndex,
-    this.endIndex,
-  );
-
   int get length => endIndex - startIndex + 1;
 
   void substring(int startIndex, int endIndex) {

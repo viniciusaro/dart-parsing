@@ -2,6 +2,7 @@ import 'package:benchmarking/example/example.dart';
 import 'package:benchmarking/parsers.dart';
 import 'package:dart_parsing/extra.dart';
 import 'package:dart_parsing/dart_parsing.dart';
+import 'package:petitparser/petitparser.dart' as petit;
 
 final coordBenchmarkInput = "15.832373° S, 47.987751° W";
 
@@ -48,10 +49,11 @@ final racesCoordCollectionsSuite = BenchmarkSuite(
 final coordCollectionsSuite = BenchmarkSuite(
   "Coord parser",
   () {
-    final escalation = 100000;
+    final escalation = 10000000;
     final input =
         List.generate(escalation, (_) => coordBenchmarkInput).join("\n");
-    print("input size: ${input.length}");
+    print("input length: ${input.length}");
+    print("input size: ${input.codeUnits.length * 2} bytes");
 
     return [
       coord.bench(
@@ -68,6 +70,11 @@ final coordCollectionsSuite = BenchmarkSuite(
       ),
       BenchmarkCoordinateRegexParser().bench(
         name: "regex on $escalation",
+        input: () =>
+            List.generate(escalation, (_) => coordBenchmarkInput).join("\n"),
+      ),
+      BenchmarkPetitParser().bench(
+        name: "petit parser on $escalation",
         input: () =>
             List.generate(escalation, (_) => coordBenchmarkInput).join("\n"),
       ),
@@ -104,5 +111,52 @@ class BenchmarkCoordinateRegexParser with Parser<Coordinate, String> {
     final rest = input.substring(match.end);
 
     return (coordinate, rest);
+  }
+}
+
+final class BenchmarkPetitParser with Parser<Coordinate, String> {
+  // Number like 15 or 15.832373
+  final number = (petit.digit().plus() &
+          (petit.char('.') & petit.digit().plus()).optional())
+      .flatten()
+      .trim()
+      .map(double.parse);
+
+  // Degree symbol
+  final degree = petit.char('°').trim();
+
+  // Direction letters
+  final northSouth = (petit.char('N') | petit.char('S'))
+      .trim()
+      .map((value) => value == 'S' ? -1 : 1);
+
+  final eastWest = (petit.char('E') | petit.char('W'))
+      .trim()
+      .map((value) => value == 'W' ? -1 : 1);
+
+  @override
+  (Coordinate, String) run(String input) {
+    final latitude =
+        (number & degree & northSouth).map((values) => values[0] * values[2]);
+
+    final longitude =
+        (number & degree & eastWest).map((values) => values[0] * values[2]);
+
+    final coordinate = (latitude & petit.char(',').trim() & longitude)
+        .map((values) => Coordinate(values[0], values[2]));
+
+    final result = coordinate.parse(input);
+    final rest = result.buffer.substring(result.position);
+
+    switch (result) {
+      case petit.Success<Coordinate>():
+        final coordinateResult = result.value;
+        return (coordinateResult, rest);
+      case petit.Failure():
+        throw ParserError(
+          expected: "Coordinate",
+          remainingInput: rest,
+        );
+    }
   }
 }
