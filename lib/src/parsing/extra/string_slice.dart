@@ -1,4 +1,4 @@
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 import 'package:unorm_dart/unorm_dart.dart' as unorm;
 
 import 'slices.dart';

@@ -1,5 +1,5 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 
 class OperationBenchmark extends BenchmarkBase {
   final void Function() operation;

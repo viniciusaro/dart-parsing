@@ -1,4 +1,4 @@
-import 'package:parsing/fp.dart';
+import 'package:dart_parsing/fp.dart';
 import 'package:unorm_dart/unorm_dart.dart' as unorm;
 
 part 'always.dart';

@@ -1,5 +1,5 @@
 import 'package:benchmarking/parsers.dart';
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 
 final doubleMaxDoubleSuite = BenchmarkSuite("Double parsers, max double", () {
   final string = "1234567891234567891.1";

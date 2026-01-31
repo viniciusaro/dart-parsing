@@ -1,5 +1,5 @@
 import 'package:benchmarking/parsers.dart';
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 
 final intMaxIntSuite = BenchmarkSuite("Int parsers, max int", () {
   final string = "1234567891234567891";

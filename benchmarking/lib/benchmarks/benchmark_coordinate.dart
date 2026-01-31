@@ -1,7 +1,7 @@
 import 'package:benchmarking/example/example.dart';
 import 'package:benchmarking/parsers.dart';
-import 'package:parsing/extra.dart';
-import 'package:parsing/parsing.dart';
+import 'package:dart_parsing/extra.dart';
+import 'package:dart_parsing/dart_parsing.dart';
 
 final coordBenchmarkInput = "15.832373° S, 47.987751° W";
 
